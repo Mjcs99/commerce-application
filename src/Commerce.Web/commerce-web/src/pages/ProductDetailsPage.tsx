@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams} from "react-router-dom";
 import { getProductDetails } from "../product/Api/ProductsApiClient.ts";
 import styles from "./ProductDetailsPage.module.css";
-import ProductPurchaseInfo from "../product-details-page-components/ProductPurchaseInfo.tsx";
-import ProductGallery from "../product-details-page-components/ProductGallery";
+import ProductPurchaseInfo from "../components/ProductDetails/ProductPurchaseInfo.tsx";
+import ProductGallery from "../components/ProductDetails/ProductGallery.tsx";
 import type { ProductDetails } from "../types/ProductDetails.ts";
 export default function ProductDetailsPage() {
   const { id } = useParams<{ id: string }>();

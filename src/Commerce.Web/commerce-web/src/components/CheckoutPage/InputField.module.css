@@ -1,0 +1,26 @@
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.label {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.input {
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  padding: 0 12px;
+  outline: none;
+  background: rgba(255,255,255,0.85);
+}
+
+.input:focus {
+  border-color: rgba(0,0,0,0.25);
+}

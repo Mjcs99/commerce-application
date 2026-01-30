@@ -1,53 +1,32 @@
-import { useEffect, useState } from "react";
 import { Button, Stack } from "react-bootstrap";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
-import { getProductDetails } from "../../product/Api/ProductsApiClient";
-import type { ProductDetails } from "../../types/ProductDetails";
 import "./CartItem.css";
-type CartItemProps = {  
-  id: string;
-  quantity: number;
-};
+import type { ProductSummary } from "../../types/ProductSummary";
+import { Link } from "react-router-dom";
+type CartItemProps = {item: ProductSummary & { quantity: number; }};
 
-export function CartItem({ id, quantity }: CartItemProps) {
-  const { removeFromCart } = useShoppingCart();
-  const [product, setProduct] = useState<ProductDetails>();
-  useEffect(() => {
-    let cancelled = false;
 
-    (async () => {
-        try {
-        const product = await getProductDetails(id);
-        if (!cancelled) setProduct(product);
-        } catch (error) {
-        console.error("Failed to load product details for cart item", error);
-        }
-    })();
-
-    return () => {
-        cancelled = true;
-    };
-    }, [id]);
+export function CartItem({ item }: CartItemProps) {
+  const { removeFromCart, closeCart } = useShoppingCart();
   return (
     <Stack direction="horizontal" gap={3} className="cart-item">
-        {/* Change to display primary image for product */}
       <img
-        src={product?.images[0]} 
+        src={item?.primaryImageUrl} 
         alt="Product"
         className="cart-item-image"
       />
 
       <div className="me-auto">
-        <div className="cart-item-title">{product?.name}</div>
-        <div className="cart-item-meta">Qty: {quantity}</div>
+        <div className="cart-item-title"><Link to={`/products/${item?.productId}`} style={{textDecoration: "none", color: "inherit"}} onClick={closeCart}>{item?.name}</Link></div>
+        <div className="cart-item-meta">Qty: {item?.quantity}</div>
       </div>
 
-      <div className="cart-item-price">${product?.price}</div>
+      <div className="cart-item-price">${item?.priceAmount}</div>
       <Button
         variant="outline-danger"
         size="sm"
         aria-label="Remove item"
-        onClick={() => removeFromCart(id)}
+        onClick={() => removeFromCart(item?.productId)}
       >
         ✕
       </Button>

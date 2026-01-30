@@ -1,0 +1,109 @@
+.summary {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+}
+
+.summaryCard {
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  backdrop-filter: blur(10px);
+}
+
+.summaryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.summaryTitle {
+  margin: 0;
+  font-size: 16px;
+}
+
+.pill {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.65);
+}
+
+.lineItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.lineItem div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    ;
+    gap: 20px;
+}
+
+.itemName {
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.itemMeta {
+  opacity: 0.7;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.price {
+  font-weight: 800;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+  margin: 10px 0;
+}
+
+.totals {
+  display: grid;
+  gap: 8px;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.totalLabel {
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.totalValue {
+  font-weight: 900;
+  font-size: 20px;
+}
+
+.cta {
+  width: 100%;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  font-weight: 800;
+  cursor: pointer;
+  background: rgba(0,0,0,0.9);
+  color: white;
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .summary {
+    position: static;
+  }
+}

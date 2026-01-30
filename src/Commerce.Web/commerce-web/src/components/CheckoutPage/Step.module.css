@@ -1,0 +1,30 @@
+.step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.6);
+}
+
+.stepNum {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  background: rgba(0,0,0,0.08);
+}
+
+.stepTitle {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.stepDesc {
+  opacity: 0.75;
+  font-size: 13px;
+  margin-top: 2px;
+}

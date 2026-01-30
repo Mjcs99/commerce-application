@@ -1,7 +1,7 @@
 export type ProductDetails = {
     productId: string;
     name: string;
-    price: Float32Array;
+    price: number;
     images: string[];
     description: string;
 }

@@ -1,5 +1,7 @@
 .container{
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 .gridContainer{
     display: grid;
@@ -8,6 +10,7 @@
     gap: 18px;
     overflow: visible;
     transition: opacity 200ms ease; 
+    max-width: 1000px;
 }
 
 .gridContainer > * {
@@ -15,6 +18,7 @@
 }
 
 .productCard {
+
     border: 10px solid rgba(0, 0, 0, 0.11);
     transition: transform 0.2s ease;
     will-change: transform;
@@ -26,6 +30,7 @@
         0 2px 6px rgba(0, 0, 0, 0.06);
 }
 .productCard img {
+  aspect-ratio: 1 / 1.25;
   width: 100%;
   height: auto;
   display: block;

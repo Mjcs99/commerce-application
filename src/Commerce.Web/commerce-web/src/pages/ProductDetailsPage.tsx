@@ -10,7 +10,7 @@ export default function ProductDetailsPage() {
   const [product, setProduct] = useState<ProductDetails>({
     productId: "",
     name: "",
-    price: new Float32Array(),
+    price: 0,
     images: [],
     description: ""
   });

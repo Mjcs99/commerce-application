@@ -1,11 +1,12 @@
 import styles from "./CheckoutForm.module.css";
 import Step from "./Step.tsx";
 import InputField from "./InputField.tsx";
-import { useMsal } from "@azure/msal-react";
+import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../auth/msalConfig";
 
-export default function CheckoutForm({ isAuthed }: { isAuthed: boolean }) {
+export default function CheckoutForm() {
   const { instance, inProgress } = useMsal();
+  const isAuthenticated = useIsAuthenticated();
 
   return (
     <div className={styles.card}>
@@ -14,7 +15,7 @@ export default function CheckoutForm({ isAuthed }: { isAuthed: boolean }) {
         <p className={styles.cardHint}>No stress — you can review before paying.</p>
       </div>
 
-      {isAuthed ? (
+      {isAuthenticated ? (
         <>
           <div className={styles.stepRow}>
             <Step number="1" title="Shipping address" desc="Where should we send the drip?" />

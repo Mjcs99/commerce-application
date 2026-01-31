@@ -31,7 +31,7 @@ async function http<T>(path: string, init: RequestInit & { body?: any } = {}): P
       ...(init.body !== undefined ? { "Content-Type": "application/json" } : {}),
       ...(init.headers ?? {}),
     },
-    body: init.body !== undefined ? JSON.stringify(init.body) : undefined,
+    body: init.body !== undefined ? init.body : undefined,
   });
 
   if (!res.ok) {
@@ -47,6 +47,7 @@ export async function get<T>(path: string, init?: RequestInit){
   return http<T>(path, { ...init, method: "GET" });
 }
 
-export async function post<T>(path: string, init?: RequestInit){
+export async function post<T>(path: string,  
+                              init?: RequestInit) {
   return http<T>(path, { ...init, method: "POST" });
 }

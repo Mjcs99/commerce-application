@@ -1,5 +1,5 @@
 export type ProductSummary = {
-  productId: string;
+  productId: string; 
   name: string;
   priceAmount: number;
   primaryImageUrl: string;

@@ -7,9 +7,10 @@ import CheckoutPage from "./pages/CheckoutPage";
 import { Navbar } from "./components/Nav/Navbar.tsx";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { MsalProvider } from "@azure/msal-react";
 import { msalInstance } from "./auth/msalConfig.ts";
 import { RequireAuth } from "./auth/RequireAuth.tsx";
+import { AuthBootstrap } from "./auth/Authbootstrap.ts";
+import { MsalProvider } from "@azure/msal-react";
 export default function App() {
   return (
     <MsalProvider instance={msalInstance}>
@@ -23,6 +24,7 @@ export default function App() {
           </Route>
           <Route path="/checkout" element={
             <RequireAuth>
+              <AuthBootstrap />
               <CheckoutPage />
             </RequireAuth>
           } />

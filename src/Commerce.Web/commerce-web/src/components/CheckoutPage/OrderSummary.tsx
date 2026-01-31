@@ -2,14 +2,19 @@ import styles from "./OrderSummary.module.css";
 import Row from "./Row.tsx";
 import { useShoppingCart } from "../../context/ShoppingCartContext.tsx";
 import { Link } from "react-router";
+import { useIsAuthenticated, useMsal } from "@azure/msal-react";
+import { usePlaceOrder } from "../../hooks/usePlaceOrder.tsx";
 
 
-export default function OrderSummary({ isAuthed }: { isAuthed: boolean }) {
+export default function OrderSummary() {
+  const isAuthenticated = useIsAuthenticated();
   const { cartItems, cartQuantity } = useShoppingCart();
   const subTotal = cartItems?.reduce((total, item) => total + item.priceAmount, 0) || 0;
   const shippingCost = 9.99;
   const tax = subTotal * 0.05;
   const totalWithShippingAndTax = subTotal + shippingCost + tax;
+
+  const placeOrderHook = usePlaceOrder();
   return (
     <div className={styles.summary}>
       <div className={styles.summaryCard}>
@@ -45,8 +50,8 @@ export default function OrderSummary({ isAuthed }: { isAuthed: boolean }) {
           <div className={styles.totalValue}>${totalWithShippingAndTax.toFixed(2)}</div>
         </div>
 
-        <button className={styles.cta} type="button">
-          {isAuthed ? "Pay & place order" : "Sign in to continue"}
+        <button className={styles.cta} type="button" onClick={placeOrderHook}>
+          {isAuthenticated ? "Pay & place order" : "Sign in to continue"}
         </button>
       </div>
     </div>

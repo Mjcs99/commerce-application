@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
-import { getCategorySlugs } from "../../product/Api/ProductsApiClient";
+import { getCategorySlugs } from "../../api/product/ProductsApiClient";
 import styles from "./ProductMenu.module.css"
 
 export default function ProductMenu() {

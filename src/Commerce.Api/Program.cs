@@ -13,6 +13,7 @@ using Commerce.Api.Exceptions;
 using Commerce.Application.DependencyInjection;
 using Commerce.Infrastructure.Options;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,24 @@ builder.Services.AddInfrastructureServices(builder.Configuration)
                 .AddApplicationServices();
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+    .AddMicrosoftIdentityWebApi(
+        jwtBearerOptions =>
+        {
+            var clientId = builder.Configuration["AzureAd:ClientId"];
+
+            jwtBearerOptions.TokenValidationParameters.ValidAudiences = new[]
+            {
+                clientId,
+                $"api://{clientId}"
+            };
+        },
+        microsoftIdentityOptions =>
+        {
+            builder.Configuration.Bind("AzureAd", microsoftIdentityOptions);
+        },
+        JwtBearerDefaults.AuthenticationScheme,
+        subscribeToJwtBearerMiddlewareDiagnosticsEvents: false
+    );
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
@@ -31,7 +49,10 @@ builder.Services.AddScoped<IIntegrationEventHandler, OrderPlacedEventHandler>();
 builder.Services.AddScoped<IIntegrationEventHandler, OrderProcessedEmailHandler>();
 builder.Services.AddAuthorization();
 builder.Services.AddApiVersioning();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
 builder.Services.AddProblemDetails(configure =>
 {
     configure.CustomizeProblemDetails = context =>
@@ -42,18 +63,15 @@ builder.Services.AddProblemDetails(configure =>
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 // CORS
 
-const string DevCors = "DevCors";
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(DevCors, policy =>
+    options.AddPolicy("DevCors", policy =>
     {
         policy
             .WithOrigins("http://localhost:5173", "https://localhost:5173")
             .AllowAnyHeader()
-            .AllowAnyMethod();
-            // If you use cookies/auth later, also add:
-            // .AllowCredentials();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 // Swagger UI via Swashbuckle
@@ -91,6 +109,8 @@ builder.Services.AddSwaggerGen(c =>
 
 });
 
+builder.Services.AddScoped<SeedData>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -112,14 +132,15 @@ if (app.Environment.IsDevelopment())
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<CommerceDbContext>();
     var blobStorage = scope.ServiceProvider.GetRequiredService<IOptions<BlobStorageOptions>>();
-    SeedData seeder = new SeedData(db, blobStorage);
+    await db.Database.MigrateAsync();
+    var seeder = scope.ServiceProvider.GetRequiredService<SeedData>();
     await seeder.SeedProductsAsync(count: 10);   
 }
-app.UseCors(DevCors);
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseCors("DevCors");
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseRouting(); 
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
-
 app.Run();

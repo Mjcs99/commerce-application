@@ -14,8 +14,8 @@ export default function CheckoutPage() {
       <div className={styles.container}>
         <CheckoutHeader isAuthed={isAuthed} username={username} />
         <div className={styles.grid}>
-          <CheckoutForm isAuthed={isAuthed} />
-          <OrderSummary isAuthed={isAuthed} />
+          <CheckoutForm />
+          <OrderSummary />
         </div>
       </div>
     </div>

@@ -3,6 +3,8 @@ using Commerce.Application.Interfaces.In;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Commerce.Application.Orders.Commands;
+using Commerce.Domain.Entities;
+using System.Text;
 
 namespace Commerce.Api.Controllers;
 
@@ -13,11 +15,13 @@ public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
     private readonly ICustomerService _customerService;
+    private readonly ILogger<OrderController> _logger;
     
-    public OrderController(IOrderService orderService, ICustomerService customerService)
+    public OrderController(IOrderService orderService, ICustomerService customerService, ILogger<OrderController> logger)
     {
         _orderService = orderService;
         _customerService = customerService;
+        _logger = logger;
     }
     
     [Authorize]
@@ -33,7 +37,7 @@ public class OrderController : ControllerBase
         var lastName = User.FindFirstValue(ClaimTypes.Surname);;
         var customer = await _customerService.GetOrCreateCustomerAsync(externalUserId, email, firstName, lastName, ct);
         if (customer == null) return Unauthorized();
-        var res = await _orderService.CreateOrderAsync(request, customer.Id, ct);
-        return Ok($"Order ID: {res}");
+        var orderId = await _orderService.CreateOrderAsync(request, customer.Id, ct);
+        return Ok($"Order ID: {orderId} placed successfully for customer {customer.Id}");
     }
 }

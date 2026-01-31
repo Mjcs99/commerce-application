@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace Commerce.Application.Orders.Commands;
 public sealed record PlaceOrderRequest(
+    [property: JsonPropertyName("items")]
     IReadOnlyList<OrderLineRequest> Items);
 
 public sealed record OrderLineRequest(
-    Guid ProductId,
-    int Quantity);
+    [property: JsonPropertyName("productId")] Guid ProductId,
+    [property: JsonPropertyName("quantity")] int Quantity);

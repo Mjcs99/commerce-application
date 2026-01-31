@@ -51,7 +51,6 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     });
   }
 
-
   function decreaseCartQuantity(id: string) {
     setCartItems(currItems => {
         if (currItems.find(item => item.productId === id)?.quantity === 1) {

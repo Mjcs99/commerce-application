@@ -36,7 +36,13 @@ export default function ProductGrid(){
 
     return (
     <div className={styles.container}>
-    <div className={loading ? styles.gridContainer + " " + styles.loading : styles.gridContainer}>
+    <div
+  className={[
+    styles.gridContainer,
+    loading ? styles.loading : "",
+    error ? styles.hide : "",
+  ].filter(Boolean).join(" ")}
+>
         {products.map(p => 
             <div className={styles.productCard} onClick={() => navigate("/products/" + p.productId)} key={p.productId}>
                 <img src={p.primaryImageUrl} />

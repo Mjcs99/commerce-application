@@ -15,9 +15,10 @@ public sealed class EfCustomerRepository : ICustomerRepository
         _db = dbContext;
     }
 
-    public async Task AddCustomerAsync(Customer customer, CancellationToken ct)
+    public Task AddCustomerAsync(Customer customer, CancellationToken ct)
     {
         _db.Customer.Add(customer);
+        return Task.CompletedTask;
     }
 
     public async Task<Customer?> GetCustomerByExternalIdAsync(string externalCustomerId, CancellationToken ct)

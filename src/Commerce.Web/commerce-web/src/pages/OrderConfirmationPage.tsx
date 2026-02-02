@@ -2,10 +2,12 @@ import { useParams } from "react-router-dom";
 import { createOrderConnection } from "../signalr/createOrderConnection";
 import styles from "./OrderConfirmationPage.module.css";
 import { useEffect, useState } from "react";
+import { useShoppingCart } from "../context/ShoppingCartContext";
 type OrderStatus = "Processing" | "Confirmed" | "Failed";
 export default function OrderConfirmationPage() {
     const params = useParams<{ orderId: string }>();
     const [status, setStatus] = useState<OrderStatus>("Processing");
+    const { cartItems, removeFromCart } = useShoppingCart();
     useEffect(() => {
         if (!params.orderId) return;
 
@@ -35,6 +37,12 @@ export default function OrderConfirmationPage() {
                 connection.stop().catch(() => {});
         };
     }, [params.orderId]);
+
+    useEffect(() =>
+    {
+        if(status !== "Confirmed" || !cartItems?.length) return;
+        cartItems.forEach(item => removeFromCart(item.productId));
+    }, [status]);
 
   return (
     <div className={styles.container}>

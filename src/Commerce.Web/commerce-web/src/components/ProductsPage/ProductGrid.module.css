@@ -1,8 +1,10 @@
 .container{
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
+
 }
+
 .gridContainer{
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -58,4 +60,8 @@
   border-radius: 999px;
   animation: spin 0.8s linear infinite;
 }
+.hide {
+    display: none;
+}
+
 @keyframes spin { to { transform: rotate(360deg); } }

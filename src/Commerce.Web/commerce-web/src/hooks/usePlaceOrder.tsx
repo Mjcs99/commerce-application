@@ -5,7 +5,6 @@ import { placeOrderApi } from "../api/orders/OrdersApiClient";
 export function usePlaceOrder() {
   const { cartItems } = useShoppingCart();
   const { instance } = useMsal();
-
   return async function placeOrder() {
     const account = instance.getActiveAccount();
     if (!account) throw new Error("Not signed in");
@@ -21,7 +20,6 @@ export function usePlaceOrder() {
         quantity: i.quantity,
       })),
     };
-
-    return placeOrderApi(payload, token.accessToken);
+    return await placeOrderApi(payload, token.accessToken);
   };
 }

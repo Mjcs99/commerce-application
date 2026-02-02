@@ -8,7 +8,7 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
         return (
             <div>
                 <p>Please sign in to continue checkout.</p>
-                <button onClick={() => instance.loginRedirect()}>Sign in</button>
+                <button onClick={() => instance.loginRedirect({scopes: [import.meta.env.VITE_API_SCOPE!], prompt: "login"})}>Sign in</button>
             </div>
         );
     }

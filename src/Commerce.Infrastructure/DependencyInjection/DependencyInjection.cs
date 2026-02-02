@@ -62,7 +62,6 @@ public static class DependencyInjection
         });
         
         services.AddScoped<IEmailSender, EmailSender>();
-
         return services;
     }
 }

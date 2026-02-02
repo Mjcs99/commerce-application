@@ -18,4 +18,12 @@ public sealed class EfInventoryRepository : IInventoryRepository
             .SingleOrDefaultAsync(i => i.ProductId == productId, ct) ?? throw new InvalidOperationException($"Inventory not found for product {productId}");
         inventory.Reserve(quantity);
     }
+
+    public async Task UnreserveAsync(Guid productId, int quantity, CancellationToken ct)
+    {
+        var inventory = await _db.InventoryItems
+            .SingleOrDefaultAsync(i => i.ProductId == productId, ct) ?? throw new InvalidOperationException($"Inventory not found for product {productId}");
+        inventory.Unreserve(quantity);
+    }
+
 }

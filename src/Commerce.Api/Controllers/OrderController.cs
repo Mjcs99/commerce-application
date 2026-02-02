@@ -3,8 +3,7 @@ using Commerce.Application.Interfaces.In;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Commerce.Application.Orders.Commands;
-using Commerce.Domain.Entities;
-using System.Text;
+using Commerce.Contracts.Orders;
 
 namespace Commerce.Api.Controllers;
 
@@ -24,20 +23,50 @@ public class OrderController : ControllerBase
         _logger = logger;
     }
     
-    [Authorize]
-    [HttpPost]
-    public async Task<IActionResult> PlaceOrderAsync(
-        [FromBody] PlaceOrderRequest request,
-        CancellationToken ct)
-    {
-        var externalUserId = User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier");
-        var email = User.FindFirstValue(ClaimTypes.Email);
-        if (externalUserId == null || email == null) return Unauthorized();
-        var firstName = User.FindFirstValue(ClaimTypes.GivenName);
-        var lastName = User.FindFirstValue(ClaimTypes.Surname);;
-        var customer = await _customerService.GetOrCreateCustomerAsync(externalUserId, email, firstName, lastName, ct);
-        if (customer == null) return Unauthorized();
-        var orderId = await _orderService.CreateOrderAsync(request, customer.Id, ct);
-        return Ok($"Order ID: {orderId} placed successfully for customer {customer.Id}");
-    }
+[Authorize]
+[HttpPost]
+public async Task<IActionResult> PlaceOrderAsync(
+    [FromBody] PlaceOrderRequest request,
+    CancellationToken ct)
+{
+    if (request is null)
+        return BadRequest("Request body is required.");
+
+    var externalUserId =
+        User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")
+        ?? User.FindFirstValue("oid")
+        ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    var email =
+        User.FindFirstValue(ClaimTypes.Email)
+        ?? User.FindFirstValue("emails") 
+        ?? User.FindFirstValue("preferred_username");
+
+    if (string.IsNullOrWhiteSpace(externalUserId) || string.IsNullOrWhiteSpace(email))
+        return Unauthorized();
+
+    var firstName = User.FindFirstValue(ClaimTypes.GivenName);
+    var lastName  = User.FindFirstValue(ClaimTypes.Surname);
+
+    var customer = await _customerService.GetOrCreateCustomerAsync(
+        externalUserId,
+        email,
+        firstName,
+        lastName,
+        ct);
+
+    if (customer is null)
+        return Unauthorized();
+    
+    var orderId = await _orderService.CreateOrderAsync(request, customer.Id, ct);
+
+    var response = new PlaceOrderResponse(
+        orderId,
+        customer.Id,
+        "Processing"
+    );
+
+    return Accepted(response);
+}
+
 }

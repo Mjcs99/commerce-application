@@ -1,12 +1,15 @@
 import styles from "./OrderSummary.module.css";
 import Row from "./Row.tsx";
 import { useShoppingCart } from "../../context/ShoppingCartContext.tsx";
-import { Link } from "react-router";
-import { useIsAuthenticated, useMsal } from "@azure/msal-react";
+import { Link, useNavigate } from "react-router";
+import { useIsAuthenticated } from "@azure/msal-react";
 import { usePlaceOrder } from "../../hooks/usePlaceOrder.tsx";
+import { useState } from "react";
 
 
 export default function OrderSummary() {
+  const [disabled, setDisabled] = useState(false);
+  const navigate = useNavigate();
   const isAuthenticated = useIsAuthenticated();
   const { cartItems, cartQuantity } = useShoppingCart();
   const subTotal = cartItems?.reduce((total, item) => total + item.priceAmount, 0) || 0;
@@ -50,7 +53,13 @@ export default function OrderSummary() {
           <div className={styles.totalValue}>${totalWithShippingAndTax.toFixed(2)}</div>
         </div>
 
-        <button className={styles.cta} type="button" onClick={placeOrderHook}>
+        <button className={styles.cta} type="button" disabled={disabled} 
+        onClick={
+          async () => {
+            const response = await placeOrderHook() as {orderId: string}; 
+            setDisabled(true);
+            navigate(`/confirmation/${response.orderId}`);
+          }}>
           {isAuthenticated ? "Pay & place order" : "Sign in to continue"}
         </button>
       </div>

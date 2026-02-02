@@ -1,6 +1,5 @@
 using Commerce.Application.Interfaces.Out;
 using Azure.Messaging.ServiceBus;
-using Commerce.Infrastructure.Options;
 
 namespace Commerce.Infrastructure.Messaging;
 

@@ -11,6 +11,7 @@ import { msalInstance } from "./auth/msalConfig.ts";
 import { RequireAuth } from "./auth/RequireAuth.tsx";
 import { AuthBootstrap } from "./auth/Authbootstrap.ts";
 import { MsalProvider } from "@azure/msal-react";
+import OrderConfirmationPage from "./pages/OrderConfirmationPage.tsx";
 export default function App() {
   return (
     <MsalProvider instance={msalInstance}>
@@ -28,6 +29,7 @@ export default function App() {
               <CheckoutPage />
             </RequireAuth>
           } />
+          <Route path="/confirmation/:orderId" element={<OrderConfirmationPage />}/>
         </Routes>
       </ShoppingCartProvider>
     </MsalProvider>

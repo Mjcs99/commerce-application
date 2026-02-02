@@ -1,4 +1,3 @@
-
 import { post } from "../../shared/httpClient";
 
 export type PlaceOrderRequest = {

@@ -1,0 +1,36 @@
+
+.container {
+    max-width: 600px;
+    margin: 4rem auto;
+    text-align: center;
+    font-family: system-ui, sans-serif;
+  }
+.processing {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: #555;
+}
+.confirmed {
+    margin-top: 2rem;
+    color: #16a34a;
+    font-size: 1.2rem;
+}
+.check {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+ @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

@@ -13,4 +13,11 @@ public class InventoryItem
 
         QuantityAvailable -= quantity;
     }
+
+    public void Unreserve(int quantity)
+    {
+        if (quantity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(quantity));
+        QuantityAvailable += quantity;
+    }
 }

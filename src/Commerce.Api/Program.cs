@@ -14,9 +14,12 @@ using Commerce.Application.DependencyInjection;
 using Commerce.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
+using Commerce.Api.Hubs;
+using Commerce.Application.Interfaces.Out;
+using Commerce.Api.Realtime;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddScoped<IHubPublisher, SignalROrderRealtimeNotifier>();
 builder.Services.AddScoped<IOutboxPublisher, OutboxPublisher>();
 builder.Services.AddHostedService<OutboxPublisherHostedService>();
 builder.Services.AddInfrastructureServices(builder.Configuration)
@@ -47,6 +50,7 @@ builder.Services.AddAuthorization(options =>
 });
 builder.Services.AddScoped<IIntegrationEventHandler, OrderPlacedEventHandler>();
 builder.Services.AddScoped<IIntegrationEventHandler, OrderProcessedEmailHandler>();
+builder.Services.AddScoped<IIntegrationEventHandler, OrderProcessedEventHandler>();
 builder.Services.AddAuthorization();
 builder.Services.AddApiVersioning();
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -110,9 +114,11 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddScoped<SeedData>();
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
-
+app.MapHub<OrdersHub>("/orderHub");
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -136,10 +142,10 @@ if (app.Environment.IsDevelopment())
     var seeder = scope.ServiceProvider.GetRequiredService<SeedData>();
     await seeder.SeedProductsAsync(count: 10);   
 }
+app.UseRouting(); 
 app.UseCors("DevCors");
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
-app.UseRouting(); 
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

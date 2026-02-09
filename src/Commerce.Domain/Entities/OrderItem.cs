@@ -8,15 +8,17 @@ public sealed class OrderItem
     public Guid ProductId { get; private set; }
     public int Quantity { get; private set; }
     public decimal UnitPrice { get; private set; }
+    public string? Name { get; private set; }
+    public string? PrimaryImageUrl { get; private set; }
 
     private OrderItem() { }
 
-    public OrderItem(Guid productId, int quantity, decimal unitPrice)
+    public OrderItem(Guid productId, string name, int quantity, decimal unitPrice, string primaryImageUrl)
     {
         ProductId = productId;
+        Name = name;
         Quantity = quantity;
         UnitPrice = unitPrice;
+        PrimaryImageUrl = primaryImageUrl;
     }
-
-    
 }

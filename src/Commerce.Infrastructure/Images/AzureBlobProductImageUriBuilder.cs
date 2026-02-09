@@ -1,6 +1,6 @@
 namespace Commerce.Infrastructure.Images;
 using Commerce.Infrastructure.Options;
-using Commerce.Application.Images;
+using Commerce.Application.Interfaces.Out;
 using Microsoft.Extensions.Options;
 
 using Azure.Storage;

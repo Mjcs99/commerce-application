@@ -1,4 +1,17 @@
-import type { ProductSummary } from "../../types/ProductSummary";
+export type ProductDetails = {
+    productId: string;
+    name: string;
+    price: number;
+    images: string[];
+    description: string;
+}
+
+export type ProductSummary = {
+  productId: string; 
+  name: string;
+  priceAmount: number;
+  primaryImageUrl: string;
+};
 
 export type GetProductsResponse = {
   items: ProductSummary[];

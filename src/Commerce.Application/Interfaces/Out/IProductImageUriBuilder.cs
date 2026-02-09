@@ -1,4 +1,4 @@
-namespace Commerce.Application.Images;
+namespace Commerce.Application.Interfaces.Out;
 
 public interface IProductImageUriBuilder
 {

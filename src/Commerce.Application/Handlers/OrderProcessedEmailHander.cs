@@ -12,8 +12,7 @@ namespace Commerce.Application.Handlers;
 public class OrderProcessedEmailHandler : IIntegrationEventHandler
 {
     private readonly IEmailSender _emailSender;
-    private readonly IHubPublisher _hubPublisher;
-    public OrderProcessedEmailHandler(IEmailSender emailSender, IHubPublisher hubPublisher)
+    public OrderProcessedEmailHandler(IEmailSender emailSender)
     {
         _emailSender = emailSender;
     }

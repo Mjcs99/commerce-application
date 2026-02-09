@@ -4,7 +4,6 @@ using Commerce.Domain.Entities;
 using Commerce.Application.Products.Queries;
 using Commerce.Application.Products.Commands;
 using Commerce.Application.Common;
-using Commerce.Application.Images;
 using Commerce.Application.Interfaces.Out;
 using Microsoft.Extensions.Logging;
 using Commerce.Application.Exceptions;

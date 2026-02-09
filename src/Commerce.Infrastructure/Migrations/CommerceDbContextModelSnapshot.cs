@@ -123,7 +123,15 @@ namespace Commerce.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("OrderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PrimaryImageUrl")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProductId")

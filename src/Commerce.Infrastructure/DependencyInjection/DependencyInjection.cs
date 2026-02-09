@@ -1,12 +1,10 @@
 namespace Commerce.Infrastructure;
-using Commerce.Application.Interfaces;
+using Commerce.Application.Interfaces.Out;
 using Microsoft.Extensions.DependencyInjection;     
 using Commerce.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Commerce.Infrastructure.Images;
-using Commerce.Application.Images;
 using Commerce.Infrastructure.Options;
-using Commerce.Application.Interfaces.Out;
 using Commerce.Infrastructure.Storage;
 using Commerce.Infrastructure.Persistence;
 using Commerce.Infrastructure.Outbox;

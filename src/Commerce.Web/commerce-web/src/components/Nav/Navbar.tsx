@@ -70,17 +70,14 @@ export function Navbar() {
           <img className="nav-bottom-logo" src={brand} />  
         </Link>
         <nav className="middle-links">
+          <Link className="navLink" to="/account">
+            My Account
+          </Link>
+          <Link className="navLink" to="/myorders">
+            My Orders
+          </Link>
           <Link className="navLink" to="/about">
             About Us
-          </Link>
-          <Link className="navLink" to="/account">
-            My account
-          </Link>
-          <Link className="navLink" to="/wishlist">
-            Wishlist
-          </Link>
-          <Link className="navLink" to="/tracking">
-            Order Tracking
           </Link>
         </nav>
 

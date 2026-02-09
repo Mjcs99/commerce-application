@@ -7,24 +7,41 @@ import styles from "./ProductMenu.module.css"
 export default function ProductMenu() {
   const [categories, setCategories] = useState<string[]>([]);
   const [searchParams] = useSearchParams();
+  const [error, setError] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  function toggleSingle(key: string, value: string){
+    const params = new URLSearchParams(location.search);
+    const keys = [...params.keys()];
+    const hasValue = keys.includes(key);
+
+    params.delete(key);
+
+    !hasValue 
+      ? params.append(key, value)
+      : params.set(key, value);
+
+    navigate({
+      pathname: "/products",
+      search: params.toString()
+    });
+  } 
 
   function toggleMulti(key: string, value: string) {
-    const next = new URLSearchParams(location.search);
-    const values = next.getAll(key);
+    const params = new URLSearchParams(location.search);
+    const values = params.getAll(key);
     const hasValue = values.includes(value);
 
-    next.delete(key);
+    params.delete(key);
 
     (hasValue
       ? values.filter(v => v !== value)
       : [...values, value]
-    ).forEach(v => next.append(key, v));
+    ).forEach(v => params.append(key, v));
 
     navigate({
       pathname: "/products",
-      search: next.toString()
+      search: params.toString()
     });
   }
 
@@ -40,6 +57,7 @@ export default function ProductMenu() {
           setCategories(res.categorySlugs); 
         }
       } catch (e) {
+        setError(true);
         console.error("Failed to load categories", e);
       }
     })();
@@ -56,11 +74,11 @@ export default function ProductMenu() {
     <div className={styles.filtersContainer}>
       <div
         className={styles.filter}>
-        Categories
+        {!error && "Categories"}
         <div className={styles.filterOptions}>
           {categories.map((c) => (
             <button key={c} className={`${isSelected("category", c) ? styles.selected : ""}`}
-            onClick={() => toggleMulti("category", c)}>
+            onClick={() => toggleSingle("category", c)}>
               {c.charAt(0).toUpperCase() + c.slice(1)}
             </button>
           ))}

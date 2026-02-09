@@ -9,7 +9,7 @@ namespace Commerce.Api.Controllers;
 
 [ApiController]
 [ApiVersion("1.0")]
-[Route("api/v{version:apiVersion}/order")]
+[Route("api/v{version:apiVersion}/orders")]
 public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
@@ -23,50 +23,86 @@ public class OrderController : ControllerBase
         _logger = logger;
     }
     
-[Authorize]
-[HttpPost]
-public async Task<IActionResult> PlaceOrderAsync(
-    [FromBody] PlaceOrderRequest request,
-    CancellationToken ct)
-{
-    if (request is null)
-        return BadRequest("Request body is required.");
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> PlaceOrderAsync(
+        [FromBody] PlaceOrderRequest request,
+        CancellationToken ct)
+    {
+        if (request is null)
+            return BadRequest("Request body is required.");
 
-    var externalUserId =
-        User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")
-        ?? User.FindFirstValue("oid")
-        ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var externalUserId =
+            User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")
+            ?? User.FindFirstValue("oid")
+            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-    var email =
-        User.FindFirstValue(ClaimTypes.Email)
-        ?? User.FindFirstValue("emails") 
-        ?? User.FindFirstValue("preferred_username");
+        var email =
+            User.FindFirstValue(ClaimTypes.Email)
+            ?? User.FindFirstValue("emails") 
+            ?? User.FindFirstValue("preferred_username");
 
-    if (string.IsNullOrWhiteSpace(externalUserId) || string.IsNullOrWhiteSpace(email))
-        return Unauthorized();
+        if (string.IsNullOrWhiteSpace(externalUserId) || string.IsNullOrWhiteSpace(email))
+            return Unauthorized();
 
-    var firstName = User.FindFirstValue(ClaimTypes.GivenName);
-    var lastName  = User.FindFirstValue(ClaimTypes.Surname);
+        var firstName = User.FindFirstValue(ClaimTypes.GivenName);
+        var lastName  = User.FindFirstValue(ClaimTypes.Surname);
 
-    var customer = await _customerService.GetOrCreateCustomerAsync(
-        externalUserId,
-        email,
-        firstName,
-        lastName,
-        ct);
+        var customer = await _customerService.GetOrCreateCustomerAsync(
+            externalUserId,
+            email,
+            firstName,
+            lastName,
+            ct);
 
-    if (customer is null)
-        return Unauthorized();
-    
-    var orderId = await _orderService.CreateOrderAsync(request, customer.Id, ct);
+        if (customer is null)
+            return Unauthorized();
+        
+        var orderId = await _orderService.CreateOrderAsync(request, customer.Id, ct);
 
-    var response = new PlaceOrderResponse(
-        orderId,
-        customer.Id,
-        "Processing"
-    );
+        var response = new PlaceOrderResponse(
+            orderId,
+            customer.Id,
+            "Processing"
+        );
 
-    return Accepted(response);
-}
+        return Accepted(response);
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> GetOrdersAsync(
+        CancellationToken ct)
+    {
+        var externalUserId =
+            User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")
+            ?? User.FindFirstValue("oid")
+            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var email =
+            User.FindFirstValue(ClaimTypes.Email)
+            ?? User.FindFirstValue("emails") 
+            ?? User.FindFirstValue("preferred_username");
+
+        if (string.IsNullOrWhiteSpace(externalUserId) || string.IsNullOrWhiteSpace(email))
+            return Unauthorized();
+
+        var firstName = User.FindFirstValue(ClaimTypes.GivenName);
+        var lastName  = User.FindFirstValue(ClaimTypes.Surname);
+
+        var customer = await _customerService.GetOrCreateCustomerAsync(
+            externalUserId,
+            email,
+            firstName,
+            lastName,
+            ct);
+
+        if (customer is null)
+            return Unauthorized();
+        
+        var orders = await _orderService.GetOrdersAsync(customer.Id, ct);
+
+        return Accepted(orders);
+    }
 
 }

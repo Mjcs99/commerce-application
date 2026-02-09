@@ -2,7 +2,7 @@ import styles from "./ProductGrid.module.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getProducts } from "../../api/product/ProductsApiClient.ts";
-import type { ProductSummary } from "../../types/ProductSummary.ts";
+import type { ProductSummary } from "../../types/Product";
 
 export default function ProductGrid(){
     const location = useLocation();
@@ -23,7 +23,7 @@ export default function ProductGrid(){
       if (!cancelled) setProducts(items);
     } catch (e) {
       console.error("Failed to load products", e);
-      if (!cancelled) setError("API is unreachable at the moment. Please try again later.");
+      if (!cancelled) setError("Our services are unavailible at at the moment. Please try again later.");
     } finally {
       if (!cancelled) setLoading(false);
     }

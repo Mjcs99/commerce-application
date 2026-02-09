@@ -4,6 +4,8 @@ import  Homepage from "./pages/Homepage.tsx";
 import ProductsPage from "./pages/ProductsPage.tsx";
 import ProductDetailsPage from "./pages/ProductDetailsPage.tsx";
 import CheckoutPage from "./pages/CheckoutPage";
+import AccountPage from "./pages/AccountPage";
+import MyOrdersPage from "./pages/MyOrdersPage.tsx";
 import { Navbar } from "./components/Nav/Navbar.tsx";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -23,6 +25,12 @@ export default function App() {
             <Route index element={<ProductsPage />} />
             <Route path=":id" element={<ProductDetailsPage />} />
           </Route>
+          <Route path="/account" element={
+            <RequireAuth>
+              <AuthBootstrap />
+              <AccountPage/>
+            </RequireAuth>
+          }/>
           <Route path="/checkout" element={
             <RequireAuth>
               <AuthBootstrap />
@@ -30,6 +38,13 @@ export default function App() {
             </RequireAuth>
           } />
           <Route path="/confirmation/:orderId" element={<OrderConfirmationPage />}/>
+          <Route path="/myorders" element={
+            <RequireAuth>
+              <AuthBootstrap />
+              <MyOrdersPage />
+            </RequireAuth>
+          }
+          />
         </Routes>
       </ShoppingCartProvider>
     </MsalProvider>

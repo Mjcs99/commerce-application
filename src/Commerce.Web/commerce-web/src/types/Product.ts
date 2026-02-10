@@ -28,3 +28,5 @@ export type GetProductDetailsResponse = {
 export type GetCategorySlugsResponse = {
   categorySlugs: string[];
 }
+
+export type CartItem = ProductSummary & {quantity: number;};

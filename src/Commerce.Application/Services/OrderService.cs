@@ -18,6 +18,7 @@ public class OrderService : IOrderService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IProductImageUriBuilder _uriBuilder;
     private readonly ILogger<OrderService> _logger;
+
     public OrderService(
         IOrderRepository orderRepository,
         IProductRepository productRepository,
@@ -39,8 +40,9 @@ public class OrderService : IOrderService
         var order = Order.Create(customerId);
 
         foreach (var orderItem in request.Items) {
-            var product = await _productRepository.GetProductByIdAsync(orderItem.ProductId, ct) ?? throw new NotFoundException($"Product with ID: {orderItem.ProductId} not found");
+            var product = await _productRepository.GetProductDetailsByIdAsync(orderItem.ProductId, ct) ?? throw new NotFoundException($"Product with ID: {orderItem.ProductId} not found");
             if (orderItem.Quantity <= 0) throw new ValidationException("Quantity must be greater than 0.");
+            _logger.LogWarning("BLOB NAME: {blobName}", product.GetPrimaryImage()?.BlobName);
             order.AddItem(product.Id, product.Name, orderItem.Quantity, product.PriceAmount, _uriBuilder.BuildUri(product.GetPrimaryImage()?.BlobName, 3600));
         }
 
@@ -61,8 +63,7 @@ public class OrderService : IOrderService
         return order.Id;
     }
 
-    private static GetOrdersResponse MapToGetOrdersResponse(
-    IReadOnlyList<Order> orders)
+    private static GetOrdersResponse MapToGetOrdersResponse(IReadOnlyList<Order> orders)
     {
         return new GetOrdersResponse(
             orders.Select(o => new OrderDTO(

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Commerce.Application.Products.Results;
 using Commerce.Infrastructure.Images;
 using Microsoft.Extensions.Logging;
+using SQLitePCL;
 
 namespace Commerce.Infrastructure.Repositories;
 

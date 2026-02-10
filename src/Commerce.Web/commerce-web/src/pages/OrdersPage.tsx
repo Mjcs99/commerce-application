@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import { getOrdersApi} from "../api/orders/OrdersApiClient";
-import { type Order } from "../types/Order" 
-import styles from "./MyOrdersPage.module.css";
-export default function MyOrdersPage() {
+import { type Order, type OrderItem } from "../types/Order" 
+import styles from "./OrdersPage.module.css";
+export default function OrdersPage() {
   const { instance } = useMsal();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
 
   useEffect(() => {
     const account = instance.getActiveAccount();
@@ -43,7 +42,12 @@ export default function MyOrdersPage() {
   if (error) return <div style={{ color: "crimson" }}>Error: {error}</div>;
   if (orders.length === 0) return <div>No orders yet.</div>;
 
-
+  function calculateOrderTotal(order: Order){
+    return order.items.reduce((total: number, item: OrderItem) => {return total + item.price * item.quantity}, 0);
+  }
+  
+    
+  
 
 return (
   <div className={styles.page}>
@@ -59,14 +63,20 @@ return (
         <div className={styles.items}>
           {order.items.map(item => (
             <div key={item.id} className={styles.itemRow}>
-              <span className={styles.product}>{item.productId.slice(0, 8)}</span>
+            <div className={styles.thumb}>
+                <span><img src={item.primaryImageUrl}/></span>
+              </div>
+              <span className={styles.product}>{item.name}</span>
               <span className={styles.quantity}>× {item.quantity}</span>
               <span className={styles.price}>${item.price.toFixed(2)}</span>
             </div>
           ))}
         </div>
-
         <div className={styles.footer}>
+          <div className={styles.total}>
+            <span>Total:</span>
+            <span>${(calculateOrderTotal(order) * 1.05).toFixed(2)}</span> {/* Store order totals */}
+          </div>
           <span className={styles.date}>
             {new Date(order.createdAtUtc).toLocaleDateString()}
           </span>

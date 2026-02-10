@@ -73,7 +73,7 @@ export function Navbar() {
           <Link className="navLink" to="/account">
             My Account
           </Link>
-          <Link className="navLink" to="/myorders">
+          <Link className="navLink" to="/account/orders">
             My Orders
           </Link>
           <Link className="navLink" to="/about">

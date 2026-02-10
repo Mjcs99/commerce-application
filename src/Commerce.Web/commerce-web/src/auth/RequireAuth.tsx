@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useMsal } from "@azure/msal-react";
+import { Outlet } from "react-router-dom";
 import styles from "./RequireAuth.module.css"
 export function RequireAuth({ children }: { children: ReactNode }) {
   const { instance, accounts } = useMsal();
@@ -33,6 +34,6 @@ export function RequireAuth({ children }: { children: ReactNode }) {
       </div>
     );
   }
-  return <>{children}</>;
+  return <Outlet/>;
 }
 

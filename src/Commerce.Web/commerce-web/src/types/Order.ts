@@ -9,6 +9,8 @@ export type OrderItem = {
   productId: string;
   quantity: number;
   price: number;
+  name: string;
+  primaryImageUrl: string;
 };
 
 export type Order = {

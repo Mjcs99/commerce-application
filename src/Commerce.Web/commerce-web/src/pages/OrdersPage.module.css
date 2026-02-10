@@ -13,7 +13,7 @@
 }
 
 .orderCard {
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.13);
   border-radius: 14px;
   padding: 1.25rem 1.5rem;
   margin-bottom: 1.5rem;
@@ -52,9 +52,26 @@
   gap: 0.5rem;
 }
 
+.thumb {
+  width: 200px;         
+  height: 200px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb img{
+  max-width: 50%;
+  max-height: 50%;
+  object-fit: contain;
+}
+
 .itemRow {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  white-space: nowrap;
   gap: 1rem;
   font-size: 0.95rem;
   padding: 0.4rem 0;
@@ -80,8 +97,15 @@
 }
 
 .footer {
+  display: flex;
+  justify-content: space-between;
   margin-top: 0.75rem;
   font-size: 0.8rem;
   color: #6b7280;
   text-align: right;
+}
+
+.total{
+    display: flex;
+    gap: 10px;
 }

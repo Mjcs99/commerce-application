@@ -20,17 +20,6 @@ public class EfOrderRepository : IOrderRepository
     
     public void AddOrder(Order order)
     {
-        foreach(var item in order.Items)
-        {
-            _logger.LogWarning(
-                "Item: ProductId={ProductId}, Name={Name}, Qty={Qty}, Price={Price}",
-                item.ProductId,
-                item.Name,
-                item.Quantity,
-                item.UnitPrice
-            );
-        }
-        
         _db.Orders.Add(order);
     }
 
@@ -49,21 +38,6 @@ public class EfOrderRepository : IOrderRepository
             .OrderBy(order => order.CreatedAtUtc)
             .Reverse()
             .ToListAsync();
-        foreach(var order in orders){
-        foreach(var item in order.Items)
-        {
-            _logger.LogWarning(
-                "Item: ProductId={ProductId}, Name={Name}, Qty={Qty}, Price={Price}",
-                item.ProductId,
-                item.Name,
-                item.Quantity,
-                item.UnitPrice
-            );
-        }
-        }
-        
-       
-    
         return orders;
     }
 }

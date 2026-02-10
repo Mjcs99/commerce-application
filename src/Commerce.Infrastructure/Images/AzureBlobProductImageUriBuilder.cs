@@ -17,7 +17,6 @@ public sealed class AzureBlobProductImageUriBuilder : IProductImageUriBuilder
         _accountName = options.Value.AccountName;
         _containerName = options.Value.ContainerName;
         _cred = new StorageSharedKeyCredential(options.Value.AccountName, options.Value.AccountKey);
-       
     }
 
     public string BuildUri(string? primaryImageBlobName, int sasMinutes)

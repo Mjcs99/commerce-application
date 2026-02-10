@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 type ShoppingCartProps = {
     isOpen: boolean;
 };
+
 export function ShoppingCart({ isOpen }: ShoppingCartProps) {
     const {closeCart, cartQuantity, cartItems} = useShoppingCart();
     const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
-import { getOrdersApi} from "../api/orders/OrdersApiClient";
+import { getOrders } from "../api/orders/OrdersApiClient";
 import { type Order, type OrderItem } from "../types/Order" 
 import styles from "./OrdersPage.module.css";
 export default function OrdersPage() {
@@ -28,7 +28,7 @@ export default function OrdersPage() {
           account,
         });
 
-        const orders = await getOrdersApi(token.accessToken);
+        const orders = await getOrders(token.accessToken);
         setOrders(orders);
       } catch (e) {
         setError(e instanceof Error ? e.message : String(e));
@@ -46,9 +46,6 @@ export default function OrdersPage() {
     return order.items.reduce((total: number, item: OrderItem) => {return total + item.price * item.quantity}, 0);
   }
   
-    
-  
-
 return (
   <div className={styles.page}>
     <h1 className={styles.title}>My Orders</h1>

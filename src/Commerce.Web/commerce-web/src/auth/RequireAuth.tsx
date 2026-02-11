@@ -1,10 +1,9 @@
-import type { ReactNode } from "react";
-import { useMsal } from "@azure/msal-react";
+import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { Outlet } from "react-router-dom";
 import styles from "./RequireAuth.module.css"
-export function RequireAuth({ children }: { children: ReactNode }) {
-  const { instance, accounts } = useMsal();
-  const isAuthenticated = accounts.length > 0;
+export function RequireAuth() {
+  const { instance } = useMsal();
+  const isAuthenticated = useIsAuthenticated();
 
   if (!isAuthenticated) {
     return (
@@ -27,9 +26,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
             Sign in
           </button>
 
-          <p className={styles.footer}>
-            Secure authentication powered by Microsoft
-          </p>
+          <p className={styles.footer}>Secure authentication powered by Microsoft</p>
         </div>
       </div>
     );

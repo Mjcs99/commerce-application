@@ -12,9 +12,7 @@ export default function AccountPage() {
 
   const cards: AccountCard[] = [
     { title: "Orders", subtitle: "Track, return, or reorder", icon: "📦", to: "/account/orders" },
-    { title: "Profile", subtitle: "Personal details & preferences", icon: "👤", to: "/account/profile" },
-    { title: "Payment", subtitle: "Payment methods & wallets", icon: "💳", to: "/account/payment" },
-    { title: "Security", subtitle: "Password & sign-in settings", icon: "🔐", to: "/account/security" },
+    { title: "Profile", subtitle: "Personal details & preferences", icon: "👤", to: "/account/profile" }
   ];
 
   return (

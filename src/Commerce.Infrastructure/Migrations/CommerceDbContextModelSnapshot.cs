@@ -242,6 +242,59 @@ namespace Commerce.Infrastructure.Migrations
                     b.ToTable("OutboxMessage");
                 });
 
+            modelBuilder.Entity("Commerce.Domain.Entities.Customer", b =>
+                {
+                    b.OwnsOne("Commerce.Domain.Entities.ShippingAddress", "ShippingAddress", b1 =>
+                        {
+                            b1.Property<Guid>("CustomerId")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("TEXT")
+                                .HasColumnName("Shipping_City");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasMaxLength(80)
+                                .HasColumnType("TEXT")
+                                .HasColumnName("Shipping_Country");
+
+                            b1.Property<string>("Line1")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("TEXT")
+                                .HasColumnName("Shipping_Line1");
+
+                            b1.Property<string>("Line2")
+                                .HasMaxLength(200)
+                                .HasColumnType("TEXT")
+                                .HasColumnName("Shipping_Line2");
+
+                            b1.Property<string>("PostalCode")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("TEXT")
+                                .HasColumnName("Shipping_PostalCode");
+
+                            b1.Property<string>("Province")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("TEXT")
+                                .HasColumnName("Shipping_Province");
+
+                            b1.HasKey("CustomerId");
+
+                            b1.ToTable("Customer");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CustomerId");
+                        });
+
+                    b.Navigation("ShippingAddress");
+                });
+
             modelBuilder.Entity("Commerce.Domain.Entities.InventoryItem", b =>
                 {
                     b.HasOne("Commerce.Domain.Entities.Product", null)

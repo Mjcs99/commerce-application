@@ -51,3 +51,8 @@ export async function post<T>(path: string,
                               init?: RequestInit) {
   return http<T>(path, { ...init, method: "POST" });
 }
+
+export async function patch<T>(path: string,  
+                              init?: RequestInit) {
+  return http<T>(path, { ...init, method: "PATCH" });
+}

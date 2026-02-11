@@ -3,6 +3,7 @@ namespace Commerce.Application.Services;
 using Commerce.Application.Exceptions;
 using Commerce.Application.Interfaces.In;
 using Commerce.Application.Interfaces.Out;
+using Commerce.Contracts.Customers;
 using Commerce.Domain.Entities;
 
 public class CustomerService : ICustomerService
@@ -24,16 +25,48 @@ public class CustomerService : ICustomerService
             customer = Customer.Create(externalCustomerId, email, firstName, lastName);
             await _customerRepository.AddCustomerAsync(customer, ct);
         }
-        if (customer.FirstName != firstName || customer.LastName != lastName || customer.Email != email)
-        {
-            customer.UpdateDetails(email, firstName, lastName);
-        }
         await _unitOfWork.SaveChangesAsync(ct);
         return customer;
     }
 
-    public async Task<Customer> GetCustomerByIdAsync(Guid customerId, CancellationToken ct){
+    public async Task<Customer> GetCustomerByIdAsync(Guid customerId, CancellationToken ct)
+    {
         return await _customerRepository.GetCustomerByIdAsync(customerId, ct) ?? throw new NotFoundException($"Customer not found - {customerId}");
+    }
+
+    public async Task<bool> UpdateCustomerDetailsAsync(
+    string externalUserId,
+    UpdateCustomerRequest request,
+    CancellationToken ct)
+    {
+        var customer = await _customerRepository
+            .GetCustomerByExternalIdAsync(externalCustomerId: externalUserId, ct);
+
+        if (customer is null)
+            return false;
+
+        ShippingAddress? address = null;
+
+        if (request.ShippingAddress is not null)
+        {
+            address = new ShippingAddress(
+                request.ShippingAddress.Line1,
+                request.ShippingAddress.Line2,
+                request.ShippingAddress.City,
+                request.ShippingAddress.Province,
+                request.ShippingAddress.PostalCode,
+                request.ShippingAddress.Country
+            );
+        }
+
+        customer.UpdateDetails(
+            request.FirstName,
+            request.LastName,
+            address
+        );
+
+        await _unitOfWork.SaveChangesAsync(ct);
+        return true;
     }
 
 }

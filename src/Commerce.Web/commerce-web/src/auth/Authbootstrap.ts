@@ -1,14 +1,19 @@
-import { useMsal } from "@azure/msal-react";
 import { useEffect } from "react";
+import { useMsal } from "@azure/msal-react";
 
-export function AuthBootstrap() {
-  const { instance, accounts } = useMsal();
-
+export default function AuthBootstrap() {
+  const { instance, accounts, inProgress } = useMsal();
   useEffect(() => {
-    if (!instance.getActiveAccount() && accounts.length > 0) {
+    instance.handleRedirectPromise().catch(console.error);
+  }, [instance]);
+  useEffect(() => {
+    if (inProgress !== "none") return;
+
+    const active = instance.getActiveAccount();
+    if (!active && accounts.length > 0) {
       instance.setActiveAccount(accounts[0]);
     }
-  }, [accounts, instance]);
+  }, [instance, accounts, inProgress]);
 
   return null;
 }

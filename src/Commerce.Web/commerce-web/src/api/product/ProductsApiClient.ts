@@ -1,5 +1,5 @@
 import { get } from "../../shared/httpClient";
-import type { GetProductsResponse, GetCategorySlugsResponse, GetProductDetailsResponse } from "./Responses";
+import type { GetProductsResponse, GetCategorySlugsResponse, GetProductDetailsResponse } from "../../types/Product";
 
 export function getProducts(sp?: URLSearchParams) {
   const qs = sp?.toString();

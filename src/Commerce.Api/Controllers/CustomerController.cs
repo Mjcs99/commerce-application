@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Commerce.Application.Interfaces.In;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Commerce.Contracts.Customers;
 
 namespace Commerce.Api.Controllers;
 
@@ -21,13 +22,6 @@ public class CustomerController : ControllerBase
     [HttpPost("me")]
     public async Task<IActionResult> GetOrCreateCustomer(CancellationToken ct)
     {
-        /*
-        foreach (var claim in User.Claims)
-        {
-            Console.WriteLine($"Claim Type: {claim.Type}, Value: {claim.Value}");
-        }
-        */
-        // Switch to sub?
         var externalUserId = User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier");
         if (externalUserId == null)
         {
@@ -44,5 +38,19 @@ public class CustomerController : ControllerBase
         var lastName = User.FindFirstValue(ClaimTypes.Surname);
         var customer = await _customerService.GetOrCreateCustomerAsync(externalUserId, email, firstName, lastName, ct);
         return Ok(customer);
+    }
+
+    [Authorize]
+    [HttpPatch("me")]
+    public async Task<IActionResult> UpdateUserDetails(UpdateCustomerRequest request, CancellationToken ct)
+    {
+        var externalUserId = User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier");
+        if (externalUserId == null)
+        {
+            Console.WriteLine("No sub or 'oid claim found for the user.");
+            return Forbid();
+        }
+        await _customerService.UpdateCustomerDetailsAsync(externalUserId, request, ct);
+        return NoContent();
     }
 }

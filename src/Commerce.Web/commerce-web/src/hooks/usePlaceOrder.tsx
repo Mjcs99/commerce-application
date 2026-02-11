@@ -1,11 +1,11 @@
 import { useMsal } from "@azure/msal-react";
 import { useShoppingCart } from "../context/ShoppingCartContext";
-import { placeOrderApi } from "../api/orders/OrdersApiClient";
+import { placeOrder } from "../api/orders/OrdersApiClient";
 
 export function usePlaceOrder() {
   const { cartItems } = useShoppingCart();
   const { instance } = useMsal();
-  return async function placeOrder() {
+  return async function placeAnOrder() {
     const account = instance.getActiveAccount();
     if (!account) throw new Error("Not signed in");
 
@@ -20,6 +20,6 @@ export function usePlaceOrder() {
         quantity: i.quantity,
       })),
     };
-    return await placeOrderApi(payload, token.accessToken);
+    return await placeOrder(payload, token.accessToken);
   };
 }

@@ -94,10 +94,6 @@ export function Navbar() {
             <span className="accent">+403 500-8888</span>
           </span>
 
-          <span>
-            <span className="currency">CAD</span>
-            <span>▼</span>
-          </span>
         </div>
       </div>
 

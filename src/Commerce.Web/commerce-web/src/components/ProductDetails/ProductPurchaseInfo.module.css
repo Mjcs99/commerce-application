@@ -1,21 +1,97 @@
-.priceContainer {
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+.purchaseInfoContainer {
+  position: sticky;
+  top: 18px;
+
+  display: grid;
+  gap: 12px;
+
+  border-radius: 18px;
+  padding: 18px 16px;
+
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 14px 40px rgba(0, 0, 0, 0.08);
 }
-.priceContainer p {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #0b5ed7;
-  letter-spacing: 0.4px;
+
+.purchaseInfoContainer h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: rgba(0, 0, 0, 0.92);
+}
+
+.purchaseInfoContainer p {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.66);
+  line-height: 1.45;
+  font-size: 14px;
+}
+
+.priceContainer {
+  margin-top: 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.price {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: rgba(0, 0, 0, 0.90);
+  font-variant-numeric: tabular-nums;
 }
 
 .price::before {
   content: "$";
-  font-size: 1.1rem;
+  font-size: 14px;
   vertical-align: super;
   margin-right: 2px;
-  opacity: 0.8;
+  opacity: 0.7;
+}
+
+.priceContainer p:last-child {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.addToCartButton {
+  margin-top: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 14px;
+
+  background: rgba(0, 0, 0, 0.92);
+  color: #fff;
+
+  font-weight: 750;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.addToCartButton:hover {
+  background: rgba(0, 0, 0, 0.98);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
+}
+
+.addToCartButton:active {
+  transform: translateY(0px);
+}
+
+.addToCartButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 }

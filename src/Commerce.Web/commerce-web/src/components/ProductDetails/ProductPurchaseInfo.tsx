@@ -1,6 +1,5 @@
 import styles from "./ProductPurchaseInfo.module.css";
-import type { ProductDetails } from "../../types/ProductDetails.ts";
-import type { ProductSummary } from "../../types/ProductSummary.ts";
+import type { ProductDetails } from "../../types/Product.ts";
 import { useShoppingCart } from "../../context/ShoppingCartContext.tsx";
 export default function ProductPurchaseInfo({ product }: { product: ProductDetails }) {
     const { increaseCartQuantity } = useShoppingCart();

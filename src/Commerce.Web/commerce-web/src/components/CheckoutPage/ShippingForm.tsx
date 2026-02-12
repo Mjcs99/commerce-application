@@ -1,10 +1,10 @@
-import styles from "./CheckoutForm.module.css";
+import styles from "./ShippingForm.module.css";
 import Step from "./Step.tsx";
 import InputField from "./InputField.tsx";
 import { useIsAuthenticated, useMsal } from "@azure/msal-react";
-import { loginRequest } from "../../auth/msalConfig";
+import { loginRequest } from "../../auth/msalConfig.ts";
 
-export default function CheckoutForm() {
+export default function ShippingForm() {
   const { instance, inProgress } = useMsal();
   const isAuthenticated = useIsAuthenticated();
 
@@ -12,15 +12,14 @@ export default function CheckoutForm() {
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <h2 className={styles.cardTitle}>Shipping & Delivery</h2>
-        <p className={styles.cardHint}>No stress — you can review before paying.</p>
+        <p className={styles.cardHint}>Hold on—where should we send the drip?</p>
       </div>
 
       {isAuthenticated ? (
         <>
           <div className={styles.stepRow}>
-            <Step number="1" title="Shipping address" desc="Where should we send the drip?" />
-            <Step number="2" title="Delivery method" desc="Standard or express — your call." />
-            <Step number="3" title="Payment" desc="Pay securely. We don’t store card details." />
+            <Step number="1" title="Enter Shipping Address" desc="Where should we send the drip?" />
+            <Step number="2" title="Choose Delivery method" desc="Standard or express — your call." />
           </div>
 
           <div className={styles.formGrid}>

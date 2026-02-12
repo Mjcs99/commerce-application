@@ -1,4 +1,5 @@
 import styles from "./DemoDisabled.module.css"
+
 export default function DemoDisabled({
   disabled,
   message,

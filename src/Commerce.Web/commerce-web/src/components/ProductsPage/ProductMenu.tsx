@@ -74,7 +74,7 @@ export default function ProductMenu() {
     <div className={styles.filtersContainer}>
       <div
         className={styles.filter}>
-        {!error && "Categories"}
+        
         <div className={styles.filterOptions}>
           {categories.map((c) => (
             <button key={c} className={`${isSelected("category", c) ? styles.selected : ""}`}

@@ -53,10 +53,10 @@ export default function ProductGrid(){
     </div>
     {/* Fix loading state later */}
     {loading && (
-        <div className="loadingOverlay" aria-live="polite">
-          <div className="spinner" />
-        </div>
-      )}
+  <div className={styles.loadingOverlay} aria-live="polite">
+    <div className={styles.spinner} />
+  </div>
+)}
       {error && <div className="errorBanner">{error}</div>}
       </div>
     )

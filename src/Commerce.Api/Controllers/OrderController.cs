@@ -10,6 +10,7 @@ namespace Commerce.Api.Controllers;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/orders")]
+[Authorize]
 public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
@@ -23,7 +24,6 @@ public class OrderController : ControllerBase
         _logger = logger;
     }
     
-    [Authorize]
     [HttpPost]
     public async Task<IActionResult> PlaceOrderAsync(
         [FromBody] PlaceOrderRequest request,
@@ -69,7 +69,6 @@ public class OrderController : ControllerBase
         return Accepted(response);
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetOrdersAsync(
         CancellationToken ct)
@@ -102,7 +101,13 @@ public class OrderController : ControllerBase
         
         var orders = await _orderService.GetOrdersAsync(customer.Id, ct);
 
-        return Accepted(orders);
+        return Ok(orders);
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> getOrder([FromRoute] Guid id, CancellationToken ct)
+    {
+        var order = await _orderService.GetOrderAsync(id, ct);
+        return Ok(order);
+    }
 }

@@ -8,6 +8,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import AccountPage from "./pages/AccountPage";
 import OrdersPage from "./pages/OrdersPage.tsx";
 import Profile from "./pages/Profile.tsx";
+import OrderDetailsPage from "./pages/OrderDetailsPage.tsx";
 import { Navbar } from "./components/Nav/Navbar.tsx";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -36,14 +37,18 @@ export default function App() {
           <Route element={<RequireAuth />}>
             <Route path="/account">
               <Route index element={<AccountPage />} />
-              <Route path="orders" element={<OrdersPage />} />
               <Route path="profile" element={<Profile />} />
             </Route>
 
+            <Route path="/orders">
+              <Route index element={<OrdersPage />} />
+              <Route path=":orderId/confirmation" element={<OrderConfirmationPage />} />
+              <Route path=":orderId" element={<OrderDetailsPage />} />
+            </Route>
+
             <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/confirmation/:orderId" element={<OrderConfirmationPage />} />
-        
           </Route>
+
         </Routes>
       </ShoppingCartProvider>
     </MsalProvider>

@@ -1,73 +1,86 @@
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useMsal } from "@azure/msal-react";
+
 import { createOrderConnection } from "../signalr/createOrderConnection";
-import styles from "./OrderConfirmationPage.module.css";
-import { useEffect, useState } from "react";
+import { getOrder } from "../api/orders/OrdersApiClient";
 import { useShoppingCart } from "../context/ShoppingCartContext";
+
+import styles from "./OrderConfirmationPage.module.css";
+
 type OrderStatus = "Processing" | "Confirmed" | "Failed";
+
 export default function OrderConfirmationPage() {
-    const params = useParams<{ orderId: string }>();
-    const [status, setStatus] = useState<OrderStatus>("Processing");
-    const { cartItems, removeFromCart } = useShoppingCart();
-    useEffect(() => {
-        if (!params.orderId) return;
+  const params = useParams<{ orderId: string }>();
+  const orderId = params.orderId;
+  const navigate = useNavigate();
+  const [status, setStatus] = useState<OrderStatus>("Processing");
+  const [order, setOrder] = useState<any>(null); // replace any with your Order type
+  const [orderError, setOrderError] = useState<string | null>(null);
 
-        const connection = createOrderConnection();
+  const { cartItems, removeFromCart } = useShoppingCart();
+  const { instance, accounts } = useMsal();
 
-        const onOrderUpdated = (id: string, newStatus: string) => {
-            if (id !== params.orderId) return;
-            setStatus(newStatus as OrderStatus);
-        };
+  const account = useMemo(
+    () => instance.getActiveAccount() ?? accounts?.[0] ?? null,
+    [instance, accounts]
+  );
 
-        type OrderPlacedPayload = { orderId: string; status: OrderStatus };
+  useEffect(() => {
+    if (!orderId) return;
 
-        connection.on("OrderStatus", (payload: OrderPlacedPayload) => {
-            console.log(payload)
-            if (payload.orderId !== params.orderId) return;
-            setStatus(payload.status);
-        });
+    const connection = createOrderConnection();
 
-        (async () => {
-            await connection.start();
+    connection.on("OrderStatus", (payload: { orderId: string; status: OrderStatus }) => {
+      if (payload.orderId !== orderId) return;
+      setStatus(payload.status);
+    });
 
-            await connection.invoke("JoinOrder", params.orderId);
-            })().catch(console.error);
+    (async () => {
+      await connection.start();
+      await connection.invoke("JoinOrder", orderId);
+    })().catch(console.error);
 
-            return () => {
-                connection.off("OrderStatus", onOrderUpdated);
-                connection.stop().catch(() => {});
-        };
-    }, [params.orderId]);
+    return () => {
+      connection.off("OrderStatus");
+      connection.stop().catch(() => {});
+    };
+  }, [orderId]);
 
-    useEffect(() =>
-    {
-        if(status !== "Confirmed" || !cartItems?.length) return;
-        cartItems.forEach(item => removeFromCart(item.productId));
-    }, [status]);
+  const clearedRef = useRef(false);
+
+  useEffect(() => {
+    if (status !== "Confirmed") return;
+    if (clearedRef.current) return;
+    if (!cartItems?.length) return;
+
+    cartItems.forEach((item) => removeFromCart(item.productId));
+    clearedRef.current = true;
+    {navigate(`/orders/${orderId}`)}
+  }, [status, cartItems, removeFromCart]);
 
   return (
     <div className={styles.container}>
-        <h1>Thank you for your order!</h1>
-        <p>Order ID: {params.orderId}</p>
+      <h1>Thank you for your order!</h1>
+      <p>Order ID: {orderId}</p>
 
-        {status === "Processing" && (
+      {status === "Processing" && (
         <div className={styles.processing}>
-            <div className={styles.spinner} />
-            <p>Confirming your order…</p>
+          <div className={styles.spinner} />
+          <p>Confirming your order…</p>
         </div>
-        )}
+      )}
 
-        {status === "Confirmed" && (
+      {status === "Confirmed" && (
         <div className={styles.confirmed}>
-            <div className={styles.check}>✓</div>
-            <p>Your order is confirmed!</p>
+          <div className={styles.check}>✓</div>
+          <p>Your order is confirmed!</p>  
         </div>
-        )}
+      )}
 
-        {status === "Failed" && (
-        <p style={{ color: "red" }}>Something went wrong</p>
-        )}
+      {status === "Failed" && <p style={{ color: "red" }}>Something went wrong</p>}
     </div>
-    );
+  );
 }
 
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getProductDetails } from "../api/product/ProductsApiClient.ts";
 import styles from "./ProductDetailsPage.module.css";
 import ProductPurchaseInfo from "../components/ProductDetails/ProductPurchaseInfo.tsx";

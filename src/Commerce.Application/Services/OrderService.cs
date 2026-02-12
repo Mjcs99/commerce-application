@@ -89,4 +89,22 @@ public class OrderService : IOrderService
         if (orders.Count == 0) throw new NotFoundException($"No Orders Found for customer with ID: {customerId}");
         return MapToGetOrdersResponse(orders);
     }
+
+    public async Task<OrderDTO> GetOrderAsync(Guid orderId, CancellationToken ct)
+    {
+        var order = await _orderRepository.GetByIdAsync(orderId, ct) ?? throw new NotFoundException($"Order {orderId} not found.");
+        return new OrderDTO(
+                OrderId: order.Id,
+                CustomerId: order.CustomerId,
+                Status: order.Status.ToString(),
+                CreatedAtUtc: order.CreatedAtUtc,
+                Items: [.. order.Items.Select(i => new OrderItemDTO(
+                    Id: i.Id,
+                    ProductId: i.ProductId,
+                    Name: i.Name ?? "",
+                    Quantity: i.Quantity,
+                    Price: i.UnitPrice,
+                    PrimaryImageUrl: i.PrimaryImageUrl ?? ""
+                ))]);
+    }
 }

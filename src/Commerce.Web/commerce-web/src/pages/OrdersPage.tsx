@@ -3,9 +3,10 @@ import { useMsal } from "@azure/msal-react";
 import { getOrders } from "../api/orders/OrdersApiClient";
 import { type Order, type OrderItem } from "../types/Order" 
 import styles from "./OrdersPage.module.css";
+import { useNavigate } from "react-router-dom";
 export default function OrdersPage() {
   const { instance } = useMsal();
-
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +52,9 @@ return (
     <h1 className={styles.title}>My Orders</h1>
 
     {orders.map(order => (
-      <div key={order.orderId} className={styles.orderCard}>
+      <div key={order.orderId} className={styles.orderCard} onClick={() => {
+        navigate(`/orders/${order.orderId}`)
+      }}>
         <div className={styles.orderHeader}>
           <span className={styles.orderId}>Order #{order.orderId.slice(0, 8)}</span>
           <span className={styles.status}>{order.status}</span>

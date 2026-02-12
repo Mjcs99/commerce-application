@@ -38,7 +38,7 @@
 }
 
 .hero-button {
-  margin-top: 250px;
+  margin-top: 400px;
   appearance: none;
   border: none;
   border-radius: 40px;
@@ -48,9 +48,14 @@
   font-weight: 700;
   letter-spacing: 1px;
 
-  background: white;
+  background: rgba(255, 255, 255, 0.699);
   color: black;
   cursor: pointer;
 
   transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
+.hero-button:hover{
+  background-color: rgba(87, 54, 5, 0.589);
+  color: rgba(255, 255, 255, 0.747);
+  border: 1px solid white;
+} 

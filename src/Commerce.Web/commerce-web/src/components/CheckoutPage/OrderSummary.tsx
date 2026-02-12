@@ -58,7 +58,7 @@ export default function OrderSummary() {
           async () => {
             const response = await placeOrderHook() as {orderId: string}; 
             setDisabled(true);
-            navigate(`/confirmation/${response.orderId}`);
+            navigate(`/orders/${response.orderId}/confirmation`);
           }}>
           {isAuthenticated ? "Pay & place order" : "Sign in to continue"}
         </button>

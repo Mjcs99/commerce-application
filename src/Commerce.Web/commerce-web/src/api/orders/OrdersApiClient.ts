@@ -17,7 +17,17 @@ export async function getOrders(accessToken: string): Promise<Order[]> {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-
   return response.orders;
 }
+
+export async function getOrder(accessToken: string, orderId: string): Promise<Order>{
+  const response = await get<Order>(`/api/v1/orders/${orderId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return response;
+}
+
+
 

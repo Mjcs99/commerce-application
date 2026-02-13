@@ -119,6 +119,12 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 app.MapHub<OrdersHub>("/orderHub");
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CommerceDbContext>();
+    db.Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -136,9 +142,7 @@ if (app.Environment.IsDevelopment())
     });
 
     using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<CommerceDbContext>();
     var blobStorage = scope.ServiceProvider.GetRequiredService<IOptions<BlobStorageOptions>>();
-    await db.Database.MigrateAsync();
     var seeder = scope.ServiceProvider.GetRequiredService<SeedData>();
     await seeder.SeedProductsAsync(count: 10);   
 }

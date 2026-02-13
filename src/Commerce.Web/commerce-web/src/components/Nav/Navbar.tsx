@@ -98,7 +98,7 @@ export function Navbar() {
       <div className="nav-bottom">
         <div className="logo-searchbar-container">
           <div className="logo-link-container">
-            <img className="nav-bottom-logo" src="/UrbanthreadLogo.svg" />
+            <img className="nav-bottom-logo" src="/UrbanThreadLogo.svg" />
             <Link to="/products" className="shop-products-link">Shop All Products</Link>
           </div>
           <div className="search-bar">

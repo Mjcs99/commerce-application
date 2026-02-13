@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
-import logo from "../../../public/UrbanthreadLogo.svg";
-import brand from "../../../public/UrbanthreadBrand.svg"
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 export function Navbar() {
   const [linksOpen, setLinksOpen] = useState(false);
@@ -67,7 +65,7 @@ export function Navbar() {
         )}
         </div>
         <Link to="/">
-          <img className="nav-bottom-logo" src={brand} />  
+          <img className="nav-bottom-logo" src="/UrbanthreadBrand.svg" />  
         </Link>
         <nav className="middle-links">
           <Link className="navLink" to="/account">
@@ -100,7 +98,7 @@ export function Navbar() {
       <div className="nav-bottom">
         <div className="logo-searchbar-container">
           <div className="logo-link-container">
-            <img className="nav-bottom-logo" src={logo} />
+            <img className="nav-bottom-logo" src="/UrbanthreadLogo.svg" />
             <Link to="/products" className="shop-products-link">Shop All Products</Link>
           </div>
           <div className="search-bar">

@@ -72,7 +72,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("DevCors", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173", "https://localhost:5173")
+            .WithOrigins("http://localhost:5173", "https://localhost:5173", "https://orange-dune-09eaade0f.6.azurestaticapps.net")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();

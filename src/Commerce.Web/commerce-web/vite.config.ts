@@ -8,7 +8,7 @@ export default defineConfig({
     host: true,
     proxy: {
       "/api": {
-        target: "https://localhost:7109",
+        target: "https://commerce-api.greenpebble-34a444a9.canadacentral.azurecontainerapps.io",
          changeOrigin: true,
          secure: false
       }

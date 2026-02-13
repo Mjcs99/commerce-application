@@ -4,3 +4,4 @@ A full-stack e-commerce platform built with **ASP.NET Core, EF Core, Azure, and 
 
 The project is designed as a **production-style system**, showcasing backend architecture, cloud integration, and a modern frontend consuming a versioned HTTP API.
 
+🔗 **Live App Demo:** [Commerce Frontend](https://orange-dune-09eaade0f.6.azurestaticapps.net)

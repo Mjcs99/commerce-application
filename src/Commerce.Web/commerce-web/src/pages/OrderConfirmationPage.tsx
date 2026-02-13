@@ -1,9 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMsal } from "@azure/msal-react";
-
 import { createOrderConnection } from "../signalr/createOrderConnection";
-import { getOrder } from "../api/orders/OrdersApiClient";
 import { useShoppingCart } from "../context/ShoppingCartContext";
 
 import styles from "./OrderConfirmationPage.module.css";
@@ -15,16 +12,9 @@ export default function OrderConfirmationPage() {
   const orderId = params.orderId;
   const navigate = useNavigate();
   const [status, setStatus] = useState<OrderStatus>("Processing");
-  const [order, setOrder] = useState<any>(null); // replace any with your Order type
-  const [orderError, setOrderError] = useState<string | null>(null);
 
   const { cartItems, removeFromCart } = useShoppingCart();
-  const { instance, accounts } = useMsal();
 
-  const account = useMemo(
-    () => instance.getActiveAccount() ?? accounts?.[0] ?? null,
-    [instance, accounts]
-  );
 
   useEffect(() => {
     if (!orderId) return;

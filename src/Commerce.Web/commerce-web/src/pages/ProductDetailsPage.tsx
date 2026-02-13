@@ -14,24 +14,19 @@ export default function ProductDetailsPage() {
     images: [],
     description: ""
   });
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!id) return;
     const productId = id
     async function loadProduct() {
       try {
-        setLoading(true);
         const product = await getProductDetails(productId);
         console.log(product);
         if (!product) throw new Error(`Failed (product not found)`);
         setProduct(product);
-      } catch (e) {
-        setError((e as Error).message);
-      } finally {
-        setLoading(false);
-      }
+      } 
+      catch (e) {} 
+      finally {}
     }
     loadProduct();
   }, [id]);

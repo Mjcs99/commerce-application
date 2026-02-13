@@ -7,7 +7,6 @@ import styles from "./ProductMenu.module.css"
 export default function ProductMenu() {
   const [categories, setCategories] = useState<string[]>([]);
   const [searchParams] = useSearchParams();
-  const [error, setError] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   function toggleSingle(key: string, value: string){
@@ -26,7 +25,7 @@ export default function ProductMenu() {
       search: params.toString()
     });
   } 
-
+/*
   function toggleMulti(key: string, value: string) {
     const params = new URLSearchParams(location.search);
     const values = params.getAll(key);
@@ -44,7 +43,7 @@ export default function ProductMenu() {
       search: params.toString()
     });
   }
-
+*/
   useEffect(() => {
     let cancelled = false;
 
@@ -57,7 +56,6 @@ export default function ProductMenu() {
           setCategories(res.categorySlugs); 
         }
       } catch (e) {
-        setError(true);
         console.error("Failed to load categories", e);
       }
     })();

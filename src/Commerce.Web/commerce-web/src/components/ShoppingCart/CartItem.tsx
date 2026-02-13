@@ -1,7 +1,7 @@
 import { Button, Stack } from "react-bootstrap";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 import "./CartItem.css";
-import type { ProductSummary } from "../../types/ProductSummary";
+import type { ProductSummary } from "../../types/Product";
 import { Link } from "react-router-dom";
 type CartItemProps = {item: ProductSummary & { quantity: number; }};
 

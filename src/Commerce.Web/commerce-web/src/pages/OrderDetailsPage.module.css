@@ -324,3 +324,20 @@
   background: rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
+
+.confirmationMessage {
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.email {
+  font-weight: 600;
+  color: #333;
+}
+
+.secondaryText {
+  color: #777;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}

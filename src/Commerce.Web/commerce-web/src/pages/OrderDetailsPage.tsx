@@ -70,7 +70,19 @@ export default function OrderDetailsPage(){
 
     return (
         <div className={styles.page}>
+            
         <div className={styles.container}>
+            <div className={styles.confirmationMessage}>
+                <h3>Order Confirmed</h3>
+                <p>
+                    We've sent a confirmation email to{" "}
+                    <span className={styles.email}>{account?.username}</span>.
+                </p>
+                <p className={styles.secondaryText}>
+                    Please check your inbox. If you don't see it, be sure to check your spam or junk folder.
+                </p>
+            </div>
+
             <header className={styles.header}>
             <div>
                 <p className={styles.kicker}>Order</p>
@@ -83,7 +95,7 @@ export default function OrderDetailsPage(){
                 <span className={styles.metaValue}>{order ? shortId(order.customerId) : "—"}</span>
                 </p>
             </div>
-
+            
             <div className={styles.headerRight}>
                 <span
                 className={[

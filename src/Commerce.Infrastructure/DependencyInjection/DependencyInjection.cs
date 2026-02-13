@@ -9,6 +9,7 @@ using Commerce.Infrastructure.Storage;
 using Commerce.Infrastructure.Persistence;
 using Commerce.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Commerce.Infrastructure.Messaging;
 using Microsoft.Extensions.Options;
 using Commerce.Infrastructure.Email;
@@ -35,7 +36,7 @@ public static class DependencyInjection
         services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
         services.AddSingleton(_ => new ServiceBusClient(configuration["ServiceBus:ConnectionString"]));
         services.AddDbContext<CommerceDbContext>(options =>
-            options.UseSqlite(configuration.GetConnectionString("CommerceDb")));
+            options.UseNpgsql(configuration.GetConnectionString("CommerceDb")));
         services.Configure<ServiceBusOptions>(
             "OrderPlaced",
             configuration.GetSection("AzureServiceBus:OrderPlaced"));

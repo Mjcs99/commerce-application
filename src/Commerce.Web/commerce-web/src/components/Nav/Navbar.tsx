@@ -55,11 +55,8 @@ export function Navbar() {
                 <Link className="navLink-dropdown" to="/account">
                     My account
                 </Link>
-                <Link className="navLink-dropdown" to="/wishlist">
-                    Wishlist
-                </Link>
-                <Link className="navLink-dropdown" to="/tracking">
-                    Order Tracking
+                <Link className="navLink-dropdown" to="/orders">
+                    My Orders
                 </Link>
             </div>
         )}

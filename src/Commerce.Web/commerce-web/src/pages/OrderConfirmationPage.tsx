@@ -52,18 +52,20 @@ export default function OrderConfirmationPage() {
   }, [status, cartItems, removeFromCart]);
 
   useEffect(() => {
-  if (status !== "Failed" || reason !== "OutOfStock") return;
+    if (status !== "Failed" || reason !== "OutOfStock") return;
 
     setErrorMessage("One or more items in the placed order is out of stock.");
+    setSecondsLeft(10);
 
     const interval = setInterval(() => {
-      setSecondsLeft(secondsLeft - 1);
-
-      if (secondsLeft === 0) 
-      {
-        clearInterval(interval);
-        navigate(-1);
-      }
+      setSecondsLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          navigate(-1);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
 
     return () => clearInterval(interval);

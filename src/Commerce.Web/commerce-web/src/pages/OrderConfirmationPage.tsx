@@ -80,9 +80,11 @@ export default function OrderConfirmationPage() {
         </div>
       )}
       {errorMessage && (
-        <div className={styles.popup}>
-          <p>{errorMessage}</p>
-          <p>Redirecting in {secondsLeft} seconds...</p>
+        <div className={styles.popupOverlay}>
+          <div className={styles.popup}>
+            <p>{errorMessage}</p>
+            <p>Redirecting in {secondsLeft} seconds...</p>
+          </div>
         </div>
       )}
     </div>

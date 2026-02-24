@@ -40,4 +40,10 @@ public class EfOrderRepository : IOrderRepository
             .ToListAsync();
         return orders;
     }
-}
+
+    public async Task RemoveOrder(Guid id)
+    {
+        var order = await _db.Orders.FirstAsync(o => o.Id == id);
+        _db.Orders.Remove(order);
+    }
+}   

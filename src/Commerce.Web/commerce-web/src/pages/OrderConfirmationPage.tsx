@@ -12,18 +12,20 @@ export default function OrderConfirmationPage() {
   const orderId = params.orderId;
   const navigate = useNavigate();
   const [status, setStatus] = useState<OrderStatus>("Processing");
-
+  const [reason, setReason] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { cartItems, removeFromCart } = useShoppingCart();
-
+  const [secondsLeft, setSecondsLeft] = useState<number>(10);
 
   useEffect(() => {
     if (!orderId) return;
 
     const connection = createOrderConnection();
 
-    connection.on("OrderStatus", (payload: { orderId: string; status: OrderStatus }) => {
+    connection.on("OrderStatus", (payload: { orderId: string; status: OrderStatus; reason: string; }) => {
       if (payload.orderId !== orderId) return;
       setStatus(payload.status);
+      setReason(payload.reason);
     });
 
     (async () => {
@@ -49,6 +51,23 @@ export default function OrderConfirmationPage() {
     {navigate(`/orders/${orderId}`)}
   }, [status, cartItems, removeFromCart]);
 
+  useEffect(() => {
+  if (status !== "Failed" || reason !== "OutOfStock") return;
+
+    setErrorMessage("One or more items in the placed order is out of stock.");
+
+    const interval = setInterval(() => {
+      setSecondsLeft(secondsLeft - 1);
+
+      if (secondsLeft === 0) 
+      {
+        clearInterval(interval);
+        navigate(-1);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [status, reason, navigate]);
   return (
     <div className={styles.container}>
       <h1>Thank you for your order!</h1>
@@ -60,15 +79,12 @@ export default function OrderConfirmationPage() {
           <p>Confirming your order…</p>
         </div>
       )}
-
-      {status === "Confirmed" && (
-        <div className={styles.confirmed}>
-          <div className={styles.check}>✓</div>
-          <p>Your order is confirmed!</p>  
+      {errorMessage && (
+        <div className={styles.popup}>
+          <p>{errorMessage}</p>
+          <p>Redirecting in {secondsLeft} seconds...</p>
         </div>
       )}
-
-      {status === "Failed" && <p style={{ color: "red" }}>Something went wrong</p>}
     </div>
   );
 }

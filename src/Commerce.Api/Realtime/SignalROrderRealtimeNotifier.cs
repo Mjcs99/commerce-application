@@ -18,9 +18,9 @@ public sealed class SignalROrderRealtimeNotifier : IHubPublisher
         => _hubContext.Clients
             .Group(Group(orderId.ToString()))
             .SendAsync("OrderStatus", new {orderId = orderId.ToString(), status = "Confirmed"}, cancellationToken: ct);
-    public Task PublishOrderFailedAsync(Guid orderId, CancellationToken ct)
+    public Task PublishOrderFailedAsync(Guid orderId, string failureReason, CancellationToken ct)
         => _hubContext.Clients
             .Group(Group(orderId.ToString()))
-            .SendAsync("OrderStatus", new {orderId = orderId.ToString(), status = "Failed"}, cancellationToken: ct);
+            .SendAsync("OrderStatus", new {orderId = orderId.ToString(), status = "Failed", reason = failureReason}, cancellationToken: ct);
 
 }

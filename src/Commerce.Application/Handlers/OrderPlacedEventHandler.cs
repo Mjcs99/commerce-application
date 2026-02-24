@@ -72,7 +72,9 @@ public class OrderPlacedEventHandler : IIntegrationEventHandler
                     }
                 }
                 _logger.LogError(reserveEx, "Unable to reserve stock for ProductId={ProductId}", item.ProductId);
-                await _publisher.PublishOrderFailedAsync(evt.OrderId, ct);
+                await _orderRepo.RemoveOrder(order.Id);
+                await _publisher.PublishOrderFailedAsync(evt.OrderId, "OutOfStock", ct);
+                await _unitOfWork.SaveChangesAsync(ct);
                 throw;
             }
         }

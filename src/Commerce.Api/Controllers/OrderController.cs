@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Commerce.Application.Orders.Commands;
 using Commerce.Contracts.Orders;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Commerce.Api.Controllers;
 
@@ -15,12 +16,14 @@ public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
     private readonly ICustomerService _customerService;
+    private readonly IOrderStatusReader _statusReader;
     private readonly ILogger<OrderController> _logger;
     
-    public OrderController(IOrderService orderService, ICustomerService customerService, ILogger<OrderController> logger)
+    public OrderController(IOrderService orderService, ICustomerService customerService, IOrderStatusReader statusReader, ILogger<OrderController> logger)
     {
         _orderService = orderService;
         _customerService = customerService;
+        _statusReader = statusReader;
         _logger = logger;
     }
     
@@ -109,5 +112,16 @@ public class OrderController : ControllerBase
     {
         var order = await _orderService.GetOrderAsync(id, ct);
         return Ok(order);
+    }
+
+    [HttpGet("{id:guid}/status")]
+    public async Task<IActionResult> GetOrder(string id, CancellationToken ct)
+    {
+        if (!Guid.TryParse(id, out var orderId))
+            return BadRequest("Invalid orderId.");
+
+        var result = await _statusReader.GetOrderStatus(orderId, ct);
+
+        return Ok(result);
     }
 }

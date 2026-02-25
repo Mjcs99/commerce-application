@@ -11,3 +11,5 @@ public sealed record OrderProcessedItem(
     int Qauntity,
     decimal UnitPrice
 );
+
+public sealed record OrderFailedEvent(Guid OrderId, string FailureReason);

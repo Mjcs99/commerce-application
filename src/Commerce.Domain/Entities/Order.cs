@@ -51,4 +51,12 @@ public sealed class Order
             _ => throw new InvalidOperationException($"Cannot update from status {Status}.")
         };
     }
+    
+    public void Cancel()
+    {
+        if (Status == OrderStatus.Shipped)
+            throw new InvalidOperationException("Cannot cancel a shipped order.");
+
+        Status = OrderStatus.Cancelled;
+    }
 }

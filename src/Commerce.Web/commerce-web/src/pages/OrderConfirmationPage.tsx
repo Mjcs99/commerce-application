@@ -70,6 +70,7 @@ export default function OrderConfirmationPage() {
 
     return () => clearInterval(interval);
   }, [status, reason, navigate]);
+  
   return (
     <div className={styles.container}>
       <h1>Thank you for your order!</h1>

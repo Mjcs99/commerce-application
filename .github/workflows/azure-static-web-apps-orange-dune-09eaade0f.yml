@@ -2,12 +2,16 @@ name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - "src/Commerce.Web/commerce-web/**"
+      - ".github/workflows/azure-static-web-apps*.yml"
   pull_request:
     types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+    branches: [ main ]
+    paths:
+      - "src/Commerce.Web/commerce-web/**"
+      - ".github/workflows/azure-static-web-apps*.yml"
 
 jobs:
   build_and_deploy_job:

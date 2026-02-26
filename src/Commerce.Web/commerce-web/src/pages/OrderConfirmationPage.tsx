@@ -115,7 +115,7 @@ export default function OrderConfirmationPage() {
   }, [status, cartItems, removeFromCart]);
 
   useEffect(() => {
-    if (status?.status !== "Cancelled" || reason !== "OutOfStock") return;
+    if (status?.status !== "Cancelled") return;
 
     setErrorMessage("One or more items in the placed order is out of stock.");
     setSecondsLeft(10);

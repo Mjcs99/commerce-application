@@ -25,11 +25,8 @@ export default function OrderConfirmationPage() {
     if (!orderId || !account) return;
 
     const controller = new AbortController();
-    const maxRetries = 3;
-    const delayMs = 1500;
 
-    const sleep = (ms: number) =>
-      new Promise((resolve) => setTimeout(resolve, ms));
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
     (async () => {
       try {
@@ -38,32 +35,27 @@ export default function OrderConfirmationPage() {
           account,
         });
 
-        let attempt = 0;
+        const maxAttempts = 15;    
+        const intervalMs = 1500;
 
-        while (attempt < maxRetries) {
-          try {
-            const orderStatus = (await getOrderStatus(
-              token.accessToken,
-              orderId
-            )) as OrderStatus;
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+          const orderStatus = (await getOrderStatus(
+            token.accessToken,
+            orderId
+          )) as OrderStatus;
 
-            setStatus(orderStatus);
-            return; 
-          } catch (err: any) {
-            if (err?.name === "AbortError") return;
+          setStatus(orderStatus);
 
-            attempt++;
-
-            if (attempt >= maxRetries) {
-              throw err;
-            }
-
-            await sleep(delayMs);
+          if (orderStatus.status === "Pending") {
+            await sleep(intervalMs);
+            continue;
           }
+          return;
         }
+        console.warn("Order status still Pending after polling timeout.");
       } catch (e: any) {
         if (e?.name === "AbortError") return;
-        console.error("Order status fetch failed after retries:", e);
+        console.error("Order status polling failed:", e);
       }
     })();
 

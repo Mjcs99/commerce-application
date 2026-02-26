@@ -20,34 +20,55 @@ export default function OrderConfirmationPage() {
   
 
 
-useEffect(() => {
-  const account = instance.getActiveAccount();
-  if (!orderId || !account) return;
+  useEffect(() => {
+    const account = instance.getActiveAccount();
+    if (!orderId || !account) return;
 
-  const controller = new AbortController();
+    const controller = new AbortController();
+    const maxRetries = 3;
+    const delayMs = 1500;
 
-  (async () => {
-    try {
-      const token = await instance.acquireTokenSilent({
-        scopes: [import.meta.env.VITE_API_SCOPE!],
-        account,
-      });
+    const sleep = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
 
-      const orderStatus = (await getOrderStatus(
-        token.accessToken,
-        orderId
-      )) as OrderStatus;
+    (async () => {
+      try {
+        const token = await instance.acquireTokenSilent({
+          scopes: [import.meta.env.VITE_API_SCOPE!],
+          account,
+        });
 
-      setStatus(orderStatus);
-    } catch (e: any) {
-      if (e?.name === "AbortError") return;
-      console.error(e);
+        let attempt = 0;
 
-    }
-  })();
+        while (attempt < maxRetries) {
+          try {
+            const orderStatus = (await getOrderStatus(
+              token.accessToken,
+              orderId
+            )) as OrderStatus;
 
-  return () => controller.abort();
-}, [instance, orderId]);
+            setStatus(orderStatus);
+            return; 
+          } catch (err: any) {
+            if (err?.name === "AbortError") return;
+
+            attempt++;
+
+            if (attempt >= maxRetries) {
+              throw err;
+            }
+
+            await sleep(delayMs);
+          }
+        }
+      } catch (e: any) {
+        if (e?.name === "AbortError") return;
+        console.error("Order status fetch failed after retries:", e);
+      }
+    })();
+
+    return () => controller.abort();
+  }, [instance, orderId]);
   
   useEffect(() => {
     if (!orderId) return;

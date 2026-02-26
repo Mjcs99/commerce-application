@@ -18,13 +18,9 @@ export default function OrderConfirmationPage() {
   const [secondsLeft, setSecondsLeft] = useState<number>(10);
   const { instance } = useMsal();
   
-
-
   useEffect(() => {
     const account = instance.getActiveAccount();
     if (!orderId || !account) return;
-
-    const controller = new AbortController();
 
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -59,7 +55,7 @@ export default function OrderConfirmationPage() {
       }
     })();
 
-    return () => controller.abort();
+    return () => {};
   }, [instance, orderId]);
   
   useEffect(() => {
@@ -87,7 +83,7 @@ export default function OrderConfirmationPage() {
   const clearedRef = useRef(false);
 
   useEffect(() => {
-    if (status?.status !== "Confirmed") return;
+    if (status?.status !== "Processed") return;
     if (clearedRef.current) return;
     if (!cartItems?.length) return;
 

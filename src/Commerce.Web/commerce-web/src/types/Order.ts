@@ -20,3 +20,5 @@ export type Order = {
   createdAtUtc: string;
   items: OrderItem[];
 };
+
+export type OrderStatus = {status: string}

@@ -121,7 +121,7 @@ public class OrderController : ControllerBase
             return BadRequest("Invalid orderId.");
 
         var result = await _statusReader.GetOrderStatus(orderId, ct);
-
-        return Ok(result);
+        
+        return Ok(new OrderStatusDTO(result.ToString()));
     }
 }

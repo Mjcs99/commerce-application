@@ -25,3 +25,5 @@ public sealed record OrderDTO(
 public sealed record GetOrdersResponse(
     IReadOnlyList<OrderDTO> Orders
 );
+
+public sealed record OrderStatusDTO(string Status);

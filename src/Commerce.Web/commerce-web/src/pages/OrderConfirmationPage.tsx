@@ -2,21 +2,53 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createOrderConnection } from "../signalr/createOrderConnection";
 import { useShoppingCart } from "../context/ShoppingCartContext";
-
+import { getOrderStatus } from "../api/orders/OrdersApiClient"
 import styles from "./OrderConfirmationPage.module.css";
-
-type OrderStatus = "Processing" | "Confirmed" | "Failed";
+import { useMsal } from "@azure/msal-react";
+import { type OrderStatus } from "../types/Order"
 
 export default function OrderConfirmationPage() {
   const params = useParams<{ orderId: string }>();
   const orderId = params.orderId;
   const navigate = useNavigate();
-  const [status, setStatus] = useState<OrderStatus>("Processing");
+  const [status, setStatus] = useState<OrderStatus>();
   const [reason, setReason] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { cartItems, removeFromCart } = useShoppingCart();
   const [secondsLeft, setSecondsLeft] = useState<number>(10);
+  const { instance } = useMsal();
+  
 
+
+useEffect(() => {
+  const account = instance.getActiveAccount();
+  if (!orderId || !account) return;
+
+  const controller = new AbortController();
+
+  (async () => {
+    try {
+      const token = await instance.acquireTokenSilent({
+        scopes: [import.meta.env.VITE_API_SCOPE!],
+        account,
+      });
+
+      const orderStatus = (await getOrderStatus(
+        token.accessToken,
+        orderId
+      )) as OrderStatus;
+
+      setStatus(orderStatus);
+    } catch (e: any) {
+      if (e?.name === "AbortError") return;
+      console.error(e);
+
+    }
+  })();
+
+  return () => controller.abort();
+}, [instance, orderId]);
+  
   useEffect(() => {
     if (!orderId) return;
 
@@ -42,7 +74,7 @@ export default function OrderConfirmationPage() {
   const clearedRef = useRef(false);
 
   useEffect(() => {
-    if (status !== "Confirmed") return;
+    if (status?.status !== "Confirmed") return;
     if (clearedRef.current) return;
     if (!cartItems?.length) return;
 
@@ -52,7 +84,17 @@ export default function OrderConfirmationPage() {
   }, [status, cartItems, removeFromCart]);
 
   useEffect(() => {
-    if (status !== "Failed" || reason !== "OutOfStock") return;
+    if (status?.status !== "Confirmed") return;
+    if (clearedRef.current) return;
+    if (!cartItems?.length) return;
+
+    cartItems.forEach((item) => removeFromCart(item.productId));
+    clearedRef.current = true;
+    {navigate(`/orders/${orderId}`)}
+  }, [status, cartItems, removeFromCart]);
+
+  useEffect(() => {
+    if (status?.status !== "Cancelled" || reason !== "OutOfStock") return;
 
     setErrorMessage("One or more items in the placed order is out of stock.");
     setSecondsLeft(10);
@@ -76,7 +118,7 @@ export default function OrderConfirmationPage() {
       <h1>Thank you for your order!</h1>
       <p>Order ID: {orderId}</p>
 
-      {status === "Processing" && (
+      {status?.status === "Processing" && (
         <div className={styles.processing}>
           <div className={styles.spinner} />
           <p>Confirming your order…</p>

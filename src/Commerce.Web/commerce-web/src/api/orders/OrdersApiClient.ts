@@ -1,5 +1,5 @@
 import { post, get } from "../../shared/httpClient";
-import { type PlaceOrderRequest, type GetOrdersResponse, type Order } from "../../types/Order";
+import { type PlaceOrderRequest, type GetOrdersResponse, type Order, type OrderStatus } from "../../types/Order";
 
 export async function placeOrder(payload: PlaceOrderRequest, accessToken: string) {
   return post("/api/v1/orders", {
@@ -29,5 +29,12 @@ export async function getOrder(accessToken: string, orderId: string): Promise<Or
   return response;
 }
 
-
+export async function getOrderStatus(accessToken: string, orderId: string): Promise<OrderStatus>{
+  const response = await get<OrderStatus>(`/api/v1/orders/${orderId}/status`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return response;
+}
 

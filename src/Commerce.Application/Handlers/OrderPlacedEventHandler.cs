@@ -74,7 +74,7 @@ public class OrderPlacedEventHandler : IIntegrationEventHandler
                 _logger.LogError(reserveEx, "Unable to reserve stock for ProductId={ProductId}", item.ProductId);
                 _outbox.Enqueue("OrderFailed", JsonSerializer.Serialize(new OrderFailedEvent(OrderId: evt.OrderId, FailureReason: "Out Of Stock")));
                 order.Cancel();
-                await _orderRepo.RemoveOrder(order.Id);
+               // await _orderRepo.RemoveOrder(order.Id);
                 await _publisher.PublishOrderFailedAsync(evt.OrderId, "OutOfStock", ct);
                 await _unitOfWork.SaveChangesAsync(ct);
                 throw;

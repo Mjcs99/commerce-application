@@ -12,6 +12,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IOrderStatusReader, OrderStatusReader>();
         return services;
     }
 }

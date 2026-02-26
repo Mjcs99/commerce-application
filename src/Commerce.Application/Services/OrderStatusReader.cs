@@ -1,9 +1,10 @@
 using Commerce.Application.Exceptions;
+using Commerce.Application.Interfaces.In;
 using Commerce.Application.Interfaces.Out;
 using Commerce.Domain.Entities;
 
 namespace Commerce.Application.Services;
-public class OrderStatusReader
+public class OrderStatusReader : IOrderStatusReader
 {
     private readonly IOrderRepository _orderRepo;
     public OrderStatusReader(IOrderRepository orderRepo)

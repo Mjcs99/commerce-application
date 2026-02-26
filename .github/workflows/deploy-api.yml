@@ -29,6 +29,11 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Install Container Apps extension
+        shell: bash
+        run: |
+          az extension add --name containerapp --upgrade
+
       - name: Resolve ACR login server
         shell: bash
         run: |
@@ -36,12 +41,21 @@ jobs:
           echo "ACR_LOGIN_SERVER=$LOGIN_SERVER" >> $GITHUB_ENV
           echo "Resolved ACR login server: $LOGIN_SERVER"
 
-      - name: Build + push image to ACR + deploy to Container Apps
-        uses: azure/container-apps-deploy-action@v1
-        with:
-          appSourcePath: ${{ github.workspace }}
-          dockerfilePath: Dockerfile
-          acrName: ${{ secrets.ACR_NAME }}
-          containerAppName: ${{ secrets.CONTAINER_APP_NAME }}
-          resourceGroup: ${{ secrets.RESOURCE_GROUP }}
-          imageToDeploy: ${{ env.ACR_LOGIN_SERVER }}/commerce-api:${{ github.sha }}
+      - name: Build + push image
+        shell: bash
+        run: |
+          IMAGE="$ACR_LOGIN_SERVER/commerce-api:${{ github.sha }}"
+
+          az acr login -n "${{ secrets.ACR_NAME }}"
+
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+
+      - name: Deploy image to Container App
+        shell: bash
+        run: |
+          IMAGE="$ACR_LOGIN_SERVER/commerce-api:${{ github.sha }}"
+          az containerapp update \
+            -n "${{ secrets.CONTAINER_APP_NAME }}" \
+            -g "${{ secrets.RESOURCE_GROUP }}" \
+            --image "$IMAGE"

@@ -139,7 +139,7 @@ export default function OrderConfirmationPage() {
       <h1>Thank you for your order!</h1>
       <p>Order ID: {orderId}</p>
 
-      {status?.status === "Processing" && (
+      {status?.status === "Pending" && (
         <div className={styles.processing}>
           <div className={styles.spinner} />
           <p>Confirming your order…</p>

@@ -29,6 +29,13 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Resolve ACR login server
+        shell: bash
+        run: |
+          LOGIN_SERVER=$(az acr show -n "${{ secrets.ACR_NAME }}" -g "${{ secrets.RESOURCE_GROUP }}" --query loginServer -o tsv)
+          echo "ACR_LOGIN_SERVER=$LOGIN_SERVER" >> $GITHUB_ENV
+          echo "Resolved ACR login server: $LOGIN_SERVER"
+
       - name: Build + push image to ACR + deploy to Container Apps
         uses: azure/container-apps-deploy-action@v1
         with:
@@ -37,4 +44,4 @@ jobs:
           acrName: ${{ secrets.ACR_NAME }}
           containerAppName: ${{ secrets.CONTAINER_APP_NAME }}
           resourceGroup: ${{ secrets.RESOURCE_GROUP }}
-          imageToDeploy: ${{ secrets.ACR_NAME }}.azurecr.io/commerce-api:${{ github.sha }}
+          imageToDeploy: ${{ env.ACR_LOGIN_SERVER }}/commerce-api:${{ github.sha }}

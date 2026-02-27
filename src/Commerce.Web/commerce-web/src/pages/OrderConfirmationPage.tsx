@@ -93,16 +93,6 @@ export default function OrderConfirmationPage() {
   }, [status, cartItems, removeFromCart]);
 
   useEffect(() => {
-    if (status?.status !== "Confirmed") return;
-    if (clearedRef.current) return;
-    if (!cartItems?.length) return;
-
-    cartItems.forEach((item) => removeFromCart(item.productId));
-    clearedRef.current = true;
-    {navigate(`/orders/${orderId}`)}
-  }, [status, cartItems, removeFromCart]);
-
-  useEffect(() => {
     if (status?.status !== "Cancelled") return;
 
     setErrorMessage("One or more items in the placed order is out of stock.");

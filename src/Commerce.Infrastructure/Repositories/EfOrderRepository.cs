@@ -23,6 +23,16 @@ public class EfOrderRepository : IOrderRepository
         _db.Orders.Add(order);
     }
 
+    public async Task DeleteFailedOrdersAsync(CancellationToken ct)
+    {
+        var deletedCount = await _db.Orders
+            .Where(order =>
+                order.FailureAcknowledgedAtUtc != null)
+            .Take(10)
+            .ExecuteDeleteAsync(ct);
+        _logger.LogInformation("Deleted {num} failed orders from db", deletedCount);
+    }
+
     public async Task<Order?> GetByIdAsync(Guid id, CancellationToken ct)
     {
         return await _db.Orders

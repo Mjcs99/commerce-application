@@ -124,4 +124,16 @@ public class OrderController : ControllerBase
         
         return Ok(new OrderStatusDTO(result.ToString()));
     }
+
+    [HttpPost("{id:guid}/ack-failure")]
+    public async Task<IActionResult> FailOrder(string id, CancellationToken ct)
+    {
+        if (!Guid.TryParse(id, out var orderId))
+            return BadRequest("Invalid orderId.");
+
+        await _orderService.SetFailedAsync(orderId, ct);
+     
+        return Ok();
+    }
+    
 }

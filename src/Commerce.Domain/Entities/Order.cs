@@ -7,13 +7,14 @@ public enum OrderStatus
     Delivered,
     Cancelled
 }
+
 public sealed class Order
 {
     public Guid Id { get; private set; }
     public Guid CustomerId { get; private set; }
+    public DateTime? FailureAcknowledgedAtUtc { get; private set;}
     public OrderStatus Status { get; private set; } = OrderStatus.Pending;
     public DateTime CreatedAtUtc { get; private set; }
-
     private readonly List<OrderItem> _items = new();
     public IReadOnlyCollection<OrderItem> Items => _items;
     private Order() { }
@@ -27,6 +28,7 @@ public sealed class Order
 
     public static Order Create(Guid customerId)
         => new(Guid.NewGuid(), customerId, DateTime.UtcNow);
+        
     public void AddItem(Guid productId, string name, int quanitity, decimal unitPrice, string primaryImageUrl)
     {
         _items.Add(new OrderItem(
@@ -51,12 +53,18 @@ public sealed class Order
             _ => throw new InvalidOperationException($"Cannot update from status {Status}.")
         };
     }
-    
+
     public void Cancel()
     {
         if (Status == OrderStatus.Shipped)
             throw new InvalidOperationException("Cannot cancel a shipped order.");
 
         Status = OrderStatus.Cancelled;
+    }
+
+    public void AcknowledgeFailure()
+    {
+        if(FailureAcknowledgedAtUtc != null) throw new InvalidOperationException("Failure has already been acknowledge for order");
+        FailureAcknowledgedAtUtc = DateTime.UtcNow;
     }
 }

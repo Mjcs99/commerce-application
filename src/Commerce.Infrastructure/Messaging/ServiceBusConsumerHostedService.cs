@@ -28,7 +28,9 @@ public abstract class ServiceBusConsumerHostedService : BackgroundService
         _client = client;
         _optionsMonitor = optionsMonitor;
     }
-    protected abstract string OptionsName { get; }   
+    
+    protected abstract string OptionsName { get; }  
+
     public override async Task StartAsync(CancellationToken cancellationToken)
     {
         var options = _optionsMonitor.Get(OptionsName);

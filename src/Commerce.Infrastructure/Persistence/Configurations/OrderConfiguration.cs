@@ -22,6 +22,8 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasForeignKey(oi => oi.OrderId)   
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(o => o.FailureAcknowledgedAtUtc);
         builder.Navigation(o => o.Items).UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }
+

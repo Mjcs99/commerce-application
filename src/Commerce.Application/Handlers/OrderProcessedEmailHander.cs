@@ -1,11 +1,7 @@
-using System.Collections;
 using System.Text.Json;
-using Commerce.Application.Exceptions;
 using Commerce.Application.Interfaces.In;
 using Commerce.Application.Interfaces.Out;
 using Commerce.Contracts.IntegrationContracts.Orders;
-using Microsoft.Extensions.Logging;
-
 
 namespace Commerce.Application.Handlers;
 

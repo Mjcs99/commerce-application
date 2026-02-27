@@ -107,4 +107,19 @@ public class OrderService : IOrderService
                     PrimaryImageUrl: i.PrimaryImageUrl ?? ""
                 ))]);
     }
+
+    public async Task SetFailedAsync(Guid orderId, CancellationToken ct)
+    {
+        var order = await _orderRepository.GetByIdAsync(orderId, ct) ?? throw new NotFoundException($"Order {orderId} not found.");
+        
+        order.AcknowledgeFailure();
+
+        await _unitOfWork.SaveChangesAsync(ct);
+    }
+
+    public async Task DeleteFailedOrdersAsync(CancellationToken ct)
+    {
+        await _orderRepository.DeleteFailedOrdersAsync(ct);
+        await _unitOfWork.SaveChangesAsync();
+    }
 }

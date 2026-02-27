@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Commerce.Infrastructure.Email;
 using Azure.Messaging.ServiceBus;
 using Commerce.Api.Interfaces.Out;
+using Commerce.Infrastructure.HostedServices;
 
 public static class DependencyInjection
 {
@@ -33,6 +34,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, EfUnitOfWork>(); 
         services.AddHostedService<EmailConsumerHostedService>();
         services.AddHostedService<OrdersConsumerHostedService>();
+        services.AddHostedService<OrderCleanupHostedService>();
         services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
         services.AddSingleton(_ => new ServiceBusClient(configuration["ServiceBus:ConnectionString"]));
         services.AddDbContext<CommerceDbContext>(options =>

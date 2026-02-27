@@ -92,9 +92,9 @@ export default function OrderConfirmationPage() {
 
   useEffect(() => {
     if (status?.status !== "Cancelled") return;
-    if(reason == "OutOfStock"){
-      setErrorMessage("One or more items in the placed order is out of stock.");
-    }
+    reason == "OutOfStock" ? 
+      setErrorMessage("One or more items in the placed order is out of stock.") : setErrorMessage("An error occured while attempting to process your order, sorry for the incovenience.");
+    
 
     setSecondsLeft(10);
 

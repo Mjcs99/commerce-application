@@ -25,9 +25,10 @@ public class EfOrderRepository : IOrderRepository
 
     public async Task DeleteFailedOrdersAsync(CancellationToken ct)
     {
+        var cutoff = DateTime.UtcNow.AddDays(-7);
         var deletedCount = await _db.Orders
             .Where(order =>
-                order.FailureAcknowledgedAtUtc != null)
+                order.FailureAcknowledgedAtUtc != null || (order.Status == OrderStatus.Cancelled && order.CreatedAtUtc < cutoff))
             .Take(10)
             .ExecuteDeleteAsync(ct);
         _logger.LogInformation("Deleted {num} failed orders from db", deletedCount);

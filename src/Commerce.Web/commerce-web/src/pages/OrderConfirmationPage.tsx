@@ -28,7 +28,7 @@ export default function OrderConfirmationPage() {
       try {
         const token = await instance.acquireTokenSilent({
           scopes: [import.meta.env.VITE_API_SCOPE!],
-          account,
+          account
         });
 
         const maxAttempts = 15;    
@@ -48,9 +48,7 @@ export default function OrderConfirmationPage() {
           }
           return;
         }
-        console.warn("Order status still Pending after polling timeout.");
       } catch (e: any) {
-        if (e?.name === "AbortError") return;
         console.error("Order status polling failed:", e);
       }
     })();
@@ -94,8 +92,10 @@ export default function OrderConfirmationPage() {
 
   useEffect(() => {
     if (status?.status !== "Cancelled") return;
+    if(reason == "OutOfStock"){
+      setErrorMessage("One or more items in the placed order is out of stock.");
+    }
 
-    setErrorMessage("One or more items in the placed order is out of stock.");
     setSecondsLeft(10);
 
     const interval = setInterval(() => {
@@ -114,7 +114,7 @@ export default function OrderConfirmationPage() {
   
   return (
     <div className={styles.container}>
-      <h1>Thank you for your order!</h1>
+      <h1>Please wait while we process your order!</h1>
       <p>Order ID: {orderId}</p>
 
       {status?.status === "Pending" && (

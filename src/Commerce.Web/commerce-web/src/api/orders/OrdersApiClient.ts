@@ -38,3 +38,11 @@ export async function getOrderStatus(accessToken: string, orderId: string): Prom
   return response;
 }
 
+export async function ackOrderFailed(accessToken: string, orderId: string){
+  await post(`/api/v1/orders/${orderId}/ack-failure`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+}
+

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createOrderConnection } from "../signalr/createOrderConnection";
 import { useShoppingCart } from "../context/ShoppingCartContext";
-import { getOrderStatus } from "../api/orders/OrdersApiClient"
+import { getOrderStatus, ackOrderFailed } from "../api/orders/OrdersApiClient"
 import styles from "./OrderConfirmationPage.module.css";
 import { useMsal } from "@azure/msal-react";
 import { type OrderStatus } from "../types/Order"
@@ -94,7 +94,16 @@ export default function OrderConfirmationPage() {
     if (status?.status !== "Cancelled") return;
     reason == "OutOfStock" ? 
       setErrorMessage("One or more items in the placed order is out of stock.") : setErrorMessage("An error occured while attempting to process your order, sorry for the incovenience.");
-    
+      
+    (async () => {
+      const account = instance.getActiveAccount();
+      if (!orderId || !account) return;
+      const token =  await instance.acquireTokenSilent({
+          scopes: [import.meta.env.VITE_API_SCOPE!],
+          account
+        });
+      await ackOrderFailed(token.accessToken, orderId);
+    })();
 
     setSecondsLeft(10);
 

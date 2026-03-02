@@ -35,6 +35,7 @@ public static class DependencyInjection
         services.AddHostedService<EmailConsumerHostedService>();
         services.AddHostedService<OrdersConsumerHostedService>();
         services.AddHostedService<OrderCleanupHostedService>();
+        services.AddHostedService<OutboxPublisherHostedService>();
         services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
         services.AddSingleton(_ => new ServiceBusClient(configuration["ServiceBus:ConnectionString"]));
         services.AddDbContext<CommerceDbContext>(options =>

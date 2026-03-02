@@ -5,7 +5,6 @@ using Commerce.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi;
-using Commerce.Api.Outbox;
 using Commerce.Application.Interfaces.In.Outbox;
 using Commerce.Application.Interfaces.In;
 using Commerce.Application.Handlers;
@@ -21,7 +20,6 @@ using Commerce.Api.Realtime;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IHubPublisher, SignalROrderRealtimeNotifier>();
 builder.Services.AddScoped<IOutboxPublisher, OutboxPublisher>();
-builder.Services.AddHostedService<OutboxPublisherHostedService>();
 builder.Services.AddInfrastructureServices(builder.Configuration)
                 .AddApplicationServices();
 builder.Services

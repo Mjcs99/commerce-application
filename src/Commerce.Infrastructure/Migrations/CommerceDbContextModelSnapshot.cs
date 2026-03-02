@@ -138,7 +138,7 @@ namespace Commerce.Infrastructure.Migrations
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("PrimaryImageUrl")
+                    b.Property<string>("PrimaryImageBlobName")
                         .IsRequired()
                         .HasColumnType("text");
 

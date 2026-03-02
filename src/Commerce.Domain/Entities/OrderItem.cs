@@ -9,16 +9,16 @@ public sealed class OrderItem
     public int Quantity { get; private set; }
     public decimal UnitPrice { get; private set; }
     public string? Name { get; private set; }
-    public string? PrimaryImageUrl { get; private set; }
+    public string? PrimaryImageBlobName { get; private set; }
 
     private OrderItem() { }
 
-    public OrderItem(Guid productId, string name, int quantity, decimal unitPrice, string primaryImageUrl)
+    public OrderItem(Guid productId, string name, int quantity, decimal unitPrice, string primaryImageBlobName)
     {
         ProductId = productId;
         Name = name;
         Quantity = quantity;
         UnitPrice = unitPrice;
-        PrimaryImageUrl = primaryImageUrl;
+        PrimaryImageBlobName = primaryImageBlobName;
     }
 }

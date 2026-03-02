@@ -43,7 +43,8 @@ public class OrderService : IOrderService
             var product = await _productRepository.GetProductDetailsByIdAsync(orderItem.ProductId, ct) ?? throw new NotFoundException($"Product with ID: {orderItem.ProductId} not found");
             if (orderItem.Quantity <= 0) throw new ValidationException("Quantity must be greater than 0.");
             _logger.LogWarning("BLOB NAME: {blobName}", product.GetPrimaryImage()?.BlobName);
-            order.AddItem(product.Id, product.Name, orderItem.Quantity, product.PriceAmount, _uriBuilder.BuildUri(product.GetPrimaryImage()?.BlobName, 3600));
+            // Changing to just storing blob name
+            order.AddItem(product.Id, product.Name, orderItem.Quantity, product.PriceAmount, product.GetPrimaryImage().BlobName);
         }
 
         _orderRepository.AddOrder(order);
@@ -63,7 +64,7 @@ public class OrderService : IOrderService
         return order.Id;
     }
 
-    private static GetOrdersResponse MapToGetOrdersResponse(IReadOnlyList<Order> orders)
+    private GetOrdersResponse MapToGetOrdersResponse(IReadOnlyList<Order> orders)
     {
         return new GetOrdersResponse(
             orders.Select(o => new OrderDTO(
@@ -77,7 +78,7 @@ public class OrderService : IOrderService
                     Name: i.Name ?? "",
                     Quantity: i.Quantity,
                     Price: i.UnitPrice,
-                    PrimaryImageUrl: i.PrimaryImageUrl ?? ""
+                    PrimaryImageUrl: _uriBuilder.BuildUri(i.PrimaryImageBlobName ?? "", 3600)
                 )).ToList()
             )).ToList()
         );
@@ -104,7 +105,7 @@ public class OrderService : IOrderService
                     Name: i.Name ?? "",
                     Quantity: i.Quantity,
                     Price: i.UnitPrice,
-                    PrimaryImageUrl: i.PrimaryImageUrl ?? ""
+                    PrimaryImageUrl: _uriBuilder.BuildUri(i.PrimaryImageBlobName ?? "", 3600)
                 ))]);
     }
 

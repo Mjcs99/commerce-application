@@ -108,30 +108,24 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> getOrder([FromRoute] Guid id, CancellationToken ct)
+    public async Task<IActionResult> GetOrder([FromRoute] Guid id, CancellationToken ct)
     {
         var order = await _orderService.GetOrderAsync(id, ct);
         return Ok(order);
     }
 
     [HttpGet("{id:guid}/status")]
-    public async Task<IActionResult> GetOrder(string id, CancellationToken ct)
+    public async Task<IActionResult> GetOrderStatus([FromRoute] Guid id, CancellationToken ct)
     {
-        if (!Guid.TryParse(id, out var orderId))
-            return BadRequest("Invalid orderId.");
-
-        var result = await _statusReader.GetOrderStatus(orderId, ct);
+        var result = await _statusReader.GetOrderStatus(id, ct);
         
         return Ok(new OrderStatusDTO(result.ToString()));
     }
 
     [HttpPost("{id:guid}/ack-failure")]
-    public async Task<IActionResult> FailOrder(string id, CancellationToken ct)
+    public async Task<IActionResult> FailOrder([FromRoute] Guid id, CancellationToken ct)
     {
-        if (!Guid.TryParse(id, out var orderId))
-            return BadRequest("Invalid orderId.");
-
-        await _orderService.SetFailedAsync(orderId, ct);
+        await _orderService.SetFailedAsync(id, ct);
      
         return Ok();
     }

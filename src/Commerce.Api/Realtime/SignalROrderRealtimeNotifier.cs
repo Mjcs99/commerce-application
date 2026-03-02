@@ -20,5 +20,4 @@ public sealed class SignalROrderRealtimeNotifier : IHubPublisher
         => _hubContext.Clients
             .Group(OrdersHub.Group(orderId.ToString()))
             .SendAsync("OrderStatus", new {orderId = orderId.ToString(), status = "Failed", reason = failureReason}, cancellationToken: ct);
-
 }

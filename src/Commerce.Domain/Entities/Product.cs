@@ -32,10 +32,9 @@ public sealed class Product
     public static Product Create(string sku, string name, Guid categoryId, decimal priceAmount, string description)
         => new(Guid.NewGuid(), sku, name, categoryId, priceAmount, description);
 
-    public ProductImage? GetPrimaryImage()
+    public ProductImage GetPrimaryImage()
     {
-        return Images.FirstOrDefault(i => i.IsPrimary)
-        ?? Images.FirstOrDefault();
+        return Images.First(i => i.IsPrimary);
     }
 
     public ProductImage AddImage(string blobName, Guid imageId, bool makePrimary)

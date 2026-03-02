@@ -7,6 +7,7 @@ import ProductGallery from "../components/ProductDetails/ProductGallery.tsx";
 import type { ProductDetails } from "../types/Product";
 export default function ProductDetailsPage() {
   const { id } = useParams<{ id: string }>();
+  
   const [product, setProduct] = useState<ProductDetails>({
     productId: "",
     name: "",

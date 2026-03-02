@@ -1,4 +1,4 @@
-namespace Commerce.Infrastructure.Realtime;
+namespace Commerce.Api.Realtime;
 using Commerce.Application.Interfaces.Out;
 using Microsoft.AspNetCore.SignalR;
 using Commerce.Api.Hubs;

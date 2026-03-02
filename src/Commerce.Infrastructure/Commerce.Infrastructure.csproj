@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Commerce.Application\Commerce.Application.csproj" />
-    <ProjectReference Include="..\Commerce.Api\Commerce.Api.csproj" />
     <ProjectReference Include="..\Commerce.Domain\Commerce.Domain.csproj" />
   </ItemGroup>
 

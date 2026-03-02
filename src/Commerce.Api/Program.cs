@@ -14,7 +14,8 @@ using Commerce.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using Commerce.Api.Hubs;
-
+using Commerce.Api.Realtime;
+using Commerce.Application.Interfaces.Out;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IOutboxPublisher, OutboxPublisher>();
 builder.Services.AddInfrastructureServices(builder.Configuration)
@@ -46,6 +47,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IIntegrationEventHandler, OrderPlacedEventHandler>();
 builder.Services.AddScoped<IIntegrationEventHandler, OrderProcessedEmailHandler>();
 builder.Services.AddScoped<IIntegrationEventHandler, OrderProcessedEventHandler>();
+builder.Services.AddScoped<IHubPublisher, SignalROrderRealtimeNotifier>();
 builder.Services.AddAuthorization();
 builder.Services.AddApiVersioning();
 builder.Services.AddControllers().AddJsonOptions(options =>

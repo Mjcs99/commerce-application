@@ -15,7 +15,6 @@ using Commerce.Infrastructure.Email;
 using Azure.Messaging.ServiceBus;
 using Commerce.Api.Interfaces.Out;
 using Commerce.Infrastructure.HostedServices;
-using Commerce.Infrastructure.Realtime;
 
 public static class DependencyInjection
 {
@@ -37,7 +36,6 @@ public static class DependencyInjection
         services.AddHostedService<OrderCleanupHostedService>();
         services.AddHostedService<OutboxPublisherHostedService>();
         services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
-        services.AddScoped<IHubPublisher, SignalROrderRealtimeNotifier>();
         services.AddSingleton(_ => new ServiceBusClient(configuration["ServiceBus:ConnectionString"]));
         services.AddDbContext<CommerceDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("CommerceDb")));

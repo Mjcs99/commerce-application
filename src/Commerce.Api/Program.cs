@@ -14,11 +14,8 @@ using Commerce.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using Commerce.Api.Hubs;
-using Commerce.Application.Interfaces.Out;
-using Commerce.Api.Realtime;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddScoped<IHubPublisher, SignalROrderRealtimeNotifier>();
 builder.Services.AddScoped<IOutboxPublisher, OutboxPublisher>();
 builder.Services.AddInfrastructureServices(builder.Configuration)
                 .AddApplicationServices();

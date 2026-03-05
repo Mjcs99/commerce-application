@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Commerce.Application.Orders.Commands;
 using Commerce.Contracts.Orders;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Commerce.Application.Exceptions;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Commerce.Api.Controllers;
 
@@ -110,8 +112,15 @@ public class OrderController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetOrder([FromRoute] Guid id, CancellationToken ct)
     {
+        var externalUserId =
+            User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")
+            ?? User.FindFirstValue("oid")
+            ?? User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new NotFoundException("User cannot be found");
+        var customer = await _customerService.GetCustomerByExternalIdAsync(externalUserId, ct);
         var order = await _orderService.GetOrderAsync(id, ct);
-        return Ok(order);
+        if(customer.Id == order.CustomerId) return Ok(order);
+        return Unauthorized(); 
+        
     }
 
     [HttpGet("{id:guid}/status")]

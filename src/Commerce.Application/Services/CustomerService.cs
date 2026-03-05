@@ -69,4 +69,8 @@ public class CustomerService : ICustomerService
         return true;
     }
 
+    public async Task<Customer> GetCustomerByExternalIdAsync(string externalId, CancellationToken ct)
+    {
+        return await _customerRepository.GetCustomerByExternalIdAsync(externalId, ct) ?? throw new NotFoundException($"Customer not found - {externalId}");
+    }
 }

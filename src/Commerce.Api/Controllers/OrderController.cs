@@ -4,9 +4,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Commerce.Application.Orders.Commands;
 using Commerce.Contracts.Orders;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Commerce.Application.Exceptions;
-using System.Reflection.Metadata.Ecma335;
+using Microsoft.AspNetCore.Identity;
 
 namespace Commerce.Api.Controllers;
 
@@ -19,13 +18,16 @@ public class OrderController : ControllerBase
     private readonly IOrderService _orderService;
     private readonly ICustomerService _customerService;
     private readonly IOrderStatusReader _statusReader;
+    private readonly IAuthorizationService _auth;
     private readonly ILogger<OrderController> _logger;
+
     
-    public OrderController(IOrderService orderService, ICustomerService customerService, IOrderStatusReader statusReader, ILogger<OrderController> logger)
+    public OrderController(IOrderService orderService, ICustomerService customerService, IOrderStatusReader statusReader, IAuthorizationService auth, ILogger<OrderController> logger)
     {
         _orderService = orderService;
         _customerService = customerService;
         _statusReader = statusReader;
+        _auth = auth;
         _logger = logger;
     }
     
@@ -112,20 +114,17 @@ public class OrderController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetOrder([FromRoute] Guid id, CancellationToken ct)
     {
-        var externalUserId =
-            User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")
-            ?? User.FindFirstValue("oid")
-            ?? User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new NotFoundException("User cannot be found");
-        var customer = await _customerService.GetCustomerByExternalIdAsync(externalUserId, ct);
+        var allowed = await _auth.AuthorizeAsync(User, id, "CanAccessOrder");
+        if (!allowed.Succeeded) return Forbid();
         var order = await _orderService.GetOrderAsync(id, ct);
-        if(customer.Id == order.CustomerId) return Ok(order);
-        return Unauthorized(); 
-        
+        return Ok(order);
     }
 
     [HttpGet("{id:guid}/status")]
     public async Task<IActionResult> GetOrderStatus([FromRoute] Guid id, CancellationToken ct)
     {
+        var allowed = await _auth.AuthorizeAsync(User, id, "CanAccessOrder");
+        if (!allowed.Succeeded) return Forbid();
         var result = await _statusReader.GetOrderStatus(id, ct);
         
         return Ok(new OrderStatusDTO(result.ToString()));
@@ -134,6 +133,9 @@ public class OrderController : ControllerBase
     [HttpPost("{id:guid}/ack-failure")]
     public async Task<IActionResult> FailOrder([FromRoute] Guid id, CancellationToken ct)
     {
+        var allowed = await _auth.AuthorizeAsync(User, id, "CanAccessOrder");
+        if (!allowed.Succeeded) return Forbid();
+        
         await _orderService.SetFailedAsync(id, ct);
      
         return Ok();

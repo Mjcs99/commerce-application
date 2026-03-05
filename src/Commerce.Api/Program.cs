@@ -16,6 +16,9 @@ using Microsoft.EntityFrameworkCore;
 using Commerce.Api.Hubs;
 using Commerce.Api.Realtime;
 using Commerce.Application.Interfaces.Out;
+using Commerce.Api.Auth;
+using Microsoft.AspNetCore.Authorization;
+using Commerce.Api.Auth.Handlers;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IOutboxPublisher, OutboxPublisher>();
 builder.Services.AddInfrastructureServices(builder.Configuration)
@@ -44,6 +47,13 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
 });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("CanAccessOrder", policy =>
+        policy.Requirements.Add(new OrderOwnerRequirement()));
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, OrderOwnerHandler>();
 builder.Services.AddScoped<IIntegrationEventHandler, OrderPlacedEventHandler>();
 builder.Services.AddScoped<IIntegrationEventHandler, OrderProcessedEmailHandler>();
 builder.Services.AddScoped<IIntegrationEventHandler, OrderProcessedEventHandler>();

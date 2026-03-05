@@ -9,6 +9,7 @@ namespace Commerce.Api.Controllers;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/customer")]
+[Authorize]
 public class CustomerController : ControllerBase
 {
     private readonly ICustomerService _customerService;
@@ -18,7 +19,6 @@ public class CustomerController : ControllerBase
         _customerService = customerService;
     }
     
-    [Authorize]
     [HttpPost("me")]
     public async Task<IActionResult> GetOrCreateCustomer(CancellationToken ct)
     {
@@ -40,7 +40,6 @@ public class CustomerController : ControllerBase
         return Ok(customer);
     }
 
-    [Authorize]
     [HttpPatch("me")]
     public async Task<IActionResult> UpdateUserDetails(UpdateCustomerRequest request, CancellationToken ct)
     {

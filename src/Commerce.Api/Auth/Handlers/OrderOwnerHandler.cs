@@ -18,7 +18,7 @@ public sealed class OrderOwnerHandler : AuthorizationHandler<OrderOwnerRequireme
         OrderOwnerRequirement requirement,
         Guid orderId)
     {
-        if (context.User.IsInRole("Admin"))
+        if (context.User.IsInRole("AdminOnly"))
         {
             context.Succeed(requirement);
             return;

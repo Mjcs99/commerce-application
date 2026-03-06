@@ -9,7 +9,7 @@ import AccountPage from "./pages/AccountPage";
 import OrdersPage from "./pages/OrdersPage.tsx";
 import Profile from "./pages/Profile.tsx";
 import OrderDetailsPage from "./pages/OrderDetailsPage.tsx";
-import { Navbar } from "./components/Nav/Navbar.tsx";
+import { Navbar } from "./features/Nav/Navbar.tsx";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { msalInstance } from "./auth/msalConfig.ts";

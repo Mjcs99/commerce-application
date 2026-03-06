@@ -1,4 +1,4 @@
-import HeaderAdvertisement from "../components/HomePage/HeaderAdvertisement";
+import HeaderAdvertisement from "../features/HomePage/HeaderAdvertisement";
 import "./Homepage.css";
 
 export default function Homepage() {

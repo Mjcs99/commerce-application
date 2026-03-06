@@ -1,5 +1,5 @@
-import ProductGrid from "../components/ProductsPage/ProductGrid.tsx";
-import ProductMenu from "../components/ProductsPage/ProductMenu.tsx";
+import ProductGrid from "../features/ProductsPage/ProductGrid.tsx";
+import ProductMenu from "../features/ProductsPage/ProductMenu.tsx";
 import "./ProductsPage.css"
 export default function ProductsPage(){
     return (

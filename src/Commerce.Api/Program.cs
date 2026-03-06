@@ -46,19 +46,16 @@ builder.Services
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
-});
-builder.Services.AddAuthorization(options =>
-{
+
     options.AddPolicy("CanAccessOrder", policy =>
         policy.Requirements.Add(new OrderOwnerRequirement()));
 });
 
-builder.Services.AddSingleton<IAuthorizationHandler, OrderOwnerHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, OrderOwnerHandler>();
 builder.Services.AddScoped<IIntegrationEventHandler, OrderPlacedEventHandler>();
 builder.Services.AddScoped<IIntegrationEventHandler, OrderProcessedEmailHandler>();
 builder.Services.AddScoped<IIntegrationEventHandler, OrderProcessedEventHandler>();
 builder.Services.AddScoped<IHubPublisher, SignalROrderRealtimeNotifier>();
-builder.Services.AddAuthorization();
 builder.Services.AddApiVersioning();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -73,7 +70,6 @@ builder.Services.AddProblemDetails(configure =>
 });
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 // CORS
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("DevCors", policy =>
@@ -106,9 +102,7 @@ builder.Services.AddSwaggerGen(c =>
                 }
             }
         },
-       
     });
-
     c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
         [new OpenApiSecuritySchemeReference("oauth2", document)] =
@@ -122,10 +116,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<SeedData>();
 builder.Services.AddSignalR();
-
-
 var app = builder.Build();
-app.MapHub<OrdersHub>("/orderHub");
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<CommerceDbContext>();
@@ -153,11 +144,11 @@ if (app.Environment.IsDevelopment())
     var seeder = scope.ServiceProvider.GetRequiredService<SeedData>();
     await seeder.SeedProductsAsync(count: 10);   
 }
-app.UseRouting(); 
 app.UseCors("DevCors");
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<OrdersHub>("/orderHub");
 app.MapControllers();
 app.Run();

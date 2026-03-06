@@ -1,4 +1,4 @@
-import { post, patch } from "../../shared/httpClient"
+import { post, patch } from "../shared/httpClient"
 import type { CustomerDto, UpdateCustomerRequest } from "../../types/Customer";
 
 export function getUser(accessToken: string)

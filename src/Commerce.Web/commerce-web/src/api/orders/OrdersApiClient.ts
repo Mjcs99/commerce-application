@@ -1,4 +1,4 @@
-import { post, get } from "../../shared/httpClient";
+import { post, get } from "../shared/httpClient";
 import { type PlaceOrderRequest, type GetOrdersResponse, type Order, type OrderStatus } from "../../types/Order";
 
 export async function placeOrder(payload: PlaceOrderRequest, accessToken: string) {

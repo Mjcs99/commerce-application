@@ -1,10 +1,10 @@
 import { useMsal } from "@azure/msal-react";
 import styles from "./CheckoutPage.module.css";
-import CheckoutHeader from "../components/CheckoutPage/CheckoutHeader.tsx";
-import ShippingForm from "../components/CheckoutPage/ShippingForm.tsx";
-import PaymentForm from "../components/CheckoutPage/PaymentForm.tsx";
-import OrderSummary from "../components/CheckoutPage/OrderSummary.tsx";
-import DemoDisabled from "../components/CheckoutPage/DemoDisabled.tsx"
+import CheckoutHeader from "../features/CheckoutPage/CheckoutHeader.tsx";
+import ShippingForm from "../features/CheckoutPage/ShippingForm.tsx";
+import PaymentForm from "../features/CheckoutPage/PaymentForm.tsx";
+import OrderSummary from "../features/CheckoutPage/OrderSummary.tsx";
+import DemoDisabled from "../features/CheckoutPage/DemoDisabled.tsx"
 export default function CheckoutPage() {
   const { accounts } = useMsal();
   const isAuthed = accounts.length > 0;

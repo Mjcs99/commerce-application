@@ -1,4 +1,4 @@
-import { get } from "../../shared/httpClient";
+import { get } from "../shared/httpClient";
 import type { GetProductsResponse, GetCategorySlugsResponse, GetProductDetailsResponse } from "../../types/Product";
 
 export function getProducts(sp?: URLSearchParams) {

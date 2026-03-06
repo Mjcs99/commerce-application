@@ -4,7 +4,7 @@ import { getOrders } from "../api/orders/OrdersApiClient";
 import { type Order, type OrderItem } from "../types/Order" 
 import styles from "./OrdersPage.module.css";
 import { useNavigate } from "react-router-dom";
-import { ApiError } from "../shared/httpClient";
+import { ApiError } from "../api/shared/httpClient";
 export default function OrdersPage() {
   const { instance } = useMsal();
   const navigate = useNavigate();

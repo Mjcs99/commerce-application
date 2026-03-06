@@ -2,7 +2,7 @@ import styles from "./ProductGrid.module.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getProducts } from "../../api/product/ProductsApiClient.ts";
-import type { ProductSummary } from "../../types/Product";
+import type { ProductSummary } from "../../types/Product.ts";
 
 export default function ProductGrid() {
   const location = useLocation();

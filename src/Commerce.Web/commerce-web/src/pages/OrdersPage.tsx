@@ -4,6 +4,7 @@ import { getOrders } from "../api/orders/OrdersApiClient";
 import { type Order, type OrderItem } from "../types/Order" 
 import styles from "./OrdersPage.module.css";
 import { useNavigate } from "react-router-dom";
+import { ApiError } from "../shared/httpClient";
 export default function OrdersPage() {
   const { instance } = useMsal();
   const navigate = useNavigate();
@@ -29,8 +30,22 @@ export default function OrdersPage() {
           account,
         });
 
-        const orders = await getOrders(token.accessToken);
-        setOrders(orders);
+        try{
+          setOrders(await getOrders(token.accessToken));
+        }
+        catch(err){
+          if(err instanceof ApiError)
+          {
+            if(err.status === 404)
+            {
+              setOrders([]);
+            }
+          }
+          else
+          {
+            throw err;
+          }
+        }
       } catch (e) {
         setError(e instanceof Error ? e.message : String(e));
       } finally {
@@ -41,7 +56,7 @@ export default function OrdersPage() {
 
   if (loading) return <div>Loading orders…</div>;
   if (error) return <div style={{ color: "crimson" }}>Error: {error}</div>;
-  if (orders.length === 0) return <div>No orders yet.</div>;
+  if (orders?.length === 0) return <div>No orders yet.</div>;
 
   function calculateOrderTotal(order: Order){
     return order.items.reduce((total: number, item: OrderItem) => {return total + item.price * item.quantity}, 0);

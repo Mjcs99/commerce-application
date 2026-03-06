@@ -32,7 +32,11 @@ export default function OrderDetailsPage(){
                 account,
             });
 
+         
+            
             const o = await getOrder(token.accessToken, orderId);
+          
+
             if (cancelled) return;
 
             setOrder(o);
